@@ -239,7 +239,7 @@ const Index = () => {
             <span className="font-display font-semibold">CreatorHub</span>
           </div>
           <p className="text-sm text-muted-foreground">
-            © 2024 CreatorHub. Built with ❤️ for creators.
+            © 2026 Quantify.
           </p>
         </div>
       </footer>
