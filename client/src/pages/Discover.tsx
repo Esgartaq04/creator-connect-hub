@@ -149,16 +149,19 @@ export default function Discover() {
               {/* Level Range */}
               <div className="mb-6">
                 <Label className="text-sm font-medium mb-3 block">
-                  Creator Level ({levelRange[0]} - {levelRange[1]})
+                  Creator Level 1 - {levelRange[0]}
                 </Label>
+                
                 <Slider
-                  value={levelRange}
+                  // value={levelRange}
+                  defaultValue={[1, 5]}
                   onValueChange={setLevelRange}
                   min={1}
                   max={5}
                   step={1}
                   className="mt-2"
                 />
+
                 <div className="flex justify-between mt-2 text-xs text-muted-foreground">
                   <span>{levelNames[1]}</span>
                   <span>{levelNames[5]}</span>
