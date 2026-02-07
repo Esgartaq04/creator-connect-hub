@@ -1,5 +1,6 @@
 import type { Creator } from "@/data/mockData";
 import { levelNames } from "@/data/mockData";
+import { getAuthToken } from "@/context/AuthContext";
 
 const API_BASE_URL =
   import.meta.env.VITE_API_BASE_URL || "http://localhost:5174";
@@ -17,9 +18,11 @@ const request = async <T>(
   path: string,
   options?: RequestInit
 ): Promise<T> => {
+  const token = getAuthToken();
   const response = await fetch(`${API_BASE_URL}${path}`, {
     headers: {
       "Content-Type": "application/json",
+      ...(token ? { Authorization: `Bearer ${token}` } : {}),
     },
     ...options,
   });

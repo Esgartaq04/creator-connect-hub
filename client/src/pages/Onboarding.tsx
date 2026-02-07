@@ -17,6 +17,7 @@ import { niches, collaborationTypes } from "@/data/mockData";
 import { Sparkles, Youtube, Instagram, Music } from "lucide-react";
 import { createCreator } from "@/services/creatorService";
 import { initializeAnalytics } from "@/services/analyticsService";
+import { useAuth } from "@/context/AuthContext";
 
 const platforms = [
   { id: "youtube", label: "YouTube", icon: Youtube },
@@ -26,6 +27,7 @@ const platforms = [
 
 export default function Onboarding() {
   const navigate = useNavigate();
+  const { user } = useAuth();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
   const [formData, setFormData] = useState({
@@ -82,6 +84,22 @@ export default function Onboarding() {
     formData.niche &&
     formData.platforms.length > 0 &&
     formData.collaborationGoals.length > 0;
+
+  if (!user) {
+    return (
+      <div className="min-h-screen bg-background">
+        <Header />
+        <main className="container py-12">
+          <p className="text-sm text-muted-foreground">
+            Please log in to create your profile.
+          </p>
+          <Button className="mt-4" onClick={() => navigate("/login")}>
+            Go to Login
+          </Button>
+        </main>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-background">
