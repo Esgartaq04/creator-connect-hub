@@ -10,6 +10,7 @@ export function Header() {
     { href: "/discover", label: "Discover", icon: Compass },
     { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
     { href: "/messaging", label: "Messaging", icon: User },
+    { href: "/posts", label: "Posts", icon: LayoutDashboard },
   ];
 
   const isActive = (path: string) => location.pathname === path;
