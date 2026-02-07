@@ -119,6 +119,8 @@ export default function Dashboard() {
                       axisLine={false}
                       tickFormatter={(value) => formatNumber(value)}
                     />
+
+                    {/* weekly view bars cloumns */}
                     <Bar
                       dataKey="views"
                       fill="hsl(var(--color-blue))"
