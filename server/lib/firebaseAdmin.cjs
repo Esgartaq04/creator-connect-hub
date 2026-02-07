@@ -1,4 +1,5 @@
 const path = require("path");
+const fs = require("fs");
 const admin = require("firebase-admin");
 
 const serviceAccountPath =
@@ -11,7 +12,9 @@ if (!serviceAccountPath) {
   );
 }
 
-const serviceAccount = require(path.resolve(serviceAccountPath));
+const serviceAccount = JSON.parse(
+  fs.readFileSync(path.resolve(serviceAccountPath), "utf8")
+);
 
 if (!admin.apps.length) {
   admin.initializeApp({
@@ -21,4 +24,4 @@ if (!admin.apps.length) {
 
 const db = admin.firestore();
 
-module.exports = { db };
+module.exports = { admin, db };

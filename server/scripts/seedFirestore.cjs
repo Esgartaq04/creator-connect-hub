@@ -569,17 +569,23 @@ const analyticsData = [
 ];
 
 const seedCreators = async () => {
+  const batch = db.batch();
   for (const creator of creatorsData) {
     const { id, ...data } = creator;
-    await db.collection("creators").doc(id).set(data, { merge: true });
+    const ref = db.collection("creators").doc(id);
+    batch.set(ref, data, { merge: true });
   }
+  await batch.commit();
 };
 
 const seedAnalytics = async () => {
+  const batch = db.batch();
   for (const analytics of analyticsData) {
     const { creator_id, ...data } = analytics;
-    await db.collection("analytics").doc(creator_id).set(data, { merge: true });
+    const ref = db.collection("analytics").doc(creator_id);
+    batch.set(ref, data, { merge: true });
   }
+  await batch.commit();
 };
 
 const run = async () => {

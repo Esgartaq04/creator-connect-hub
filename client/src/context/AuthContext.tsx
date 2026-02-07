@@ -1,11 +1,18 @@
 import { createContext, useContext, useEffect, useMemo, useState } from "react";
-import type { AuthUser } from "@/services/authService";
 import {
-  fetchCurrentUser,
-  loginUser,
-  registerUser,
-  logoutUser,
-} from "@/services/authService";
+  createUserWithEmailAndPassword,
+  onAuthStateChanged,
+  signInWithEmailAndPassword,
+  signOut,
+} from "firebase/auth";
+import { auth, getAuthToken } from "@/lib/firebase";
+import { fetchUserProfile } from "@/services/userService";
+
+interface AuthUser {
+  id: string;
+  email: string | null;
+  creatorId: string | null;
+}
 
 interface AuthContextValue {
   user: AuthUser | null;
@@ -17,59 +24,67 @@ interface AuthContextValue {
 
 const AuthContext = createContext<AuthContextValue | undefined>(undefined);
 
-const tokenKey = "creatorhub_token";
-
-const getToken = () => {
-  if (typeof window === "undefined") return null;
-  return window.localStorage.getItem(tokenKey);
-};
-
-const setToken = (token: string | null) => {
-  if (typeof window === "undefined") return;
-  if (!token) {
-    window.localStorage.removeItem(tokenKey);
-    return;
-  }
-  window.localStorage.setItem(tokenKey, token);
-};
-
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<AuthUser | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    const token = getToken();
-    if (!token) {
-      setIsLoading(false);
-      return;
-    }
-    fetchCurrentUser(token)
-      .then((data) => setUser(data))
-      .catch(() => {
-        setToken(null);
+    const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
+      if (!firebaseUser) {
         setUser(null);
-      })
-      .finally(() => setIsLoading(false));
+        setIsLoading(false);
+        return;
+      }
+      try {
+        const token = await firebaseUser.getIdToken();
+        const profile = await fetchUserProfile(token);
+        setUser({
+          id: firebaseUser.uid,
+          email: firebaseUser.email,
+          creatorId: profile.creatorId ?? null,
+        });
+      } catch (error) {
+        setUser({
+          id: firebaseUser.uid,
+          email: firebaseUser.email,
+          creatorId: null,
+        });
+      } finally {
+        setIsLoading(false);
+      }
+    });
+
+    return () => unsubscribe();
   }, []);
 
   const login = async (email: string, password: string) => {
-    const response = await loginUser(email, password);
-    setToken(response.token);
-    setUser(response.user);
+    const credentials = await signInWithEmailAndPassword(auth, email, password);
+    const token = await credentials.user.getIdToken();
+    const profile = await fetchUserProfile(token);
+    setUser({
+      id: credentials.user.uid,
+      email: credentials.user.email,
+      creatorId: profile.creatorId ?? null,
+    });
   };
 
   const register = async (email: string, password: string) => {
-    const response = await registerUser(email, password);
-    setToken(response.token);
-    setUser(response.user);
+    const credentials = await createUserWithEmailAndPassword(
+      auth,
+      email,
+      password
+    );
+    const token = await credentials.user.getIdToken();
+    const profile = await fetchUserProfile(token);
+    setUser({
+      id: credentials.user.uid,
+      email: credentials.user.email,
+      creatorId: profile.creatorId ?? null,
+    });
   };
 
   const logout = () => {
-    const token = getToken();
-    if (token) {
-      logoutUser(token).catch(() => {});
-    }
-    setToken(null);
+    signOut(auth).catch(() => {});
     setUser(null);
   };
 
@@ -89,4 +104,4 @@ export const useAuth = () => {
   return context;
 };
 
-export const getAuthToken = getToken;
+export { getAuthToken };
