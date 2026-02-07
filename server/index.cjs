@@ -60,7 +60,7 @@ app.get("/api/users/me", authMiddleware, async (req, res) => {
     res.json({
       id: req.user.id,
       email: req.user.email,
-      creatorId: refreshed?.creatorId || null,
+      creatorId: refreshed?.creatorId || req.user.id,
       name: refreshed?.name || null,
       firstName: refreshed?.firstName || null,
       lastName: refreshed?.lastName || null,
@@ -81,6 +81,7 @@ app.put("/api/users/me", authMiddleware, async (req, res) => {
     await upsertUser({
       id: req.user.id,
       email: req.user.email,
+      creatorId: req.user.id,
       name,
       firstName,
       lastName,
@@ -92,7 +93,7 @@ app.put("/api/users/me", authMiddleware, async (req, res) => {
     res.json({
       id: req.user.id,
       email: req.user.email,
-      creatorId: updated?.creatorId || null,
+      creatorId: updated?.creatorId || req.user.id,
       name: updated?.name || null,
       firstName: updated?.firstName || null,
       lastName: updated?.lastName || null,
@@ -131,7 +132,7 @@ app.get("/api/creators/:id", async (req, res) => {
 
 app.post("/api/creators", authMiddleware, async (req, res) => {
   try {
-    const creatorId = await createCreator(req.body || {});
+    const creatorId = await createCreator(req.user.id, req.body || {});
     await updateUserCreator(req.user.id, creatorId);
     res.status(201).json({ id: creatorId });
   } catch (error) {
@@ -155,7 +156,7 @@ app.get("/api/analytics/:creatorId", authMiddleware, async (req, res) => {
 app.get("/api/analytics/me", authMiddleware, async (req, res) => {
   try {
     const user = await getUserById(req.user.id);
-    const creatorId = user?.creatorId;
+    const creatorId = user?.creatorId || req.user.id;
     if (!creatorId) {
       return res.json({
         weeklyViews: [],

@@ -9,10 +9,10 @@ const defaultCreatorId = import.meta.env.VITE_DEFAULT_CREATOR_ID as
 export function useCurrentCreator() {
   const { user } = useAuth();
 
-  if (user?.creatorId) {
+  if (user?.creatorId || user?.id) {
     return useQuery({
-      queryKey: ["creator", user.creatorId],
-      queryFn: () => getCreatorById(user.creatorId ?? ""),
+      queryKey: ["creator", user.creatorId || user.id],
+      queryFn: () => getCreatorById(user.creatorId ?? user?.id ?? ""),
     });
   }
 
