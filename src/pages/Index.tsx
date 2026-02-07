@@ -2,15 +2,17 @@ import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Header } from "@/components/Header";
 import { CreatorCard } from "@/components/CreatorCard";
-import { mockCreators } from "@/data/mockData";
 import { ArrowRight, Sparkles, Users, BarChart3, Handshake, ChevronRight } from "lucide-react";
 import { useState } from "react";
 import { CollaborationModal } from "@/components/CollaborationModal";
-import type { Creator } from "@/data/mockData";
+import { formatNumber, type Creator } from "@/data/mockData";
+import { useCreators } from "@/hooks/useCreators";
 
 const Index = () => {
   const [collabCreator, setCollabCreator] = useState<Creator | null>(null);
-  const featuredCreator = mockCreators[1]; // Maya for featured preview
+  const { data: creators, isLoading } = useCreators();
+  const creatorList = creators ?? [];
+  const featuredCreator = creatorList[1] ?? creatorList[0];
 
   const steps = [
     {
@@ -78,7 +80,7 @@ const Index = () => {
               {/* Social proof */}
               <div className="mt-10 flex items-center gap-4">
                 <div className="flex -space-x-2">
-                  {mockCreators.slice(0, 4).map((creator) => (
+                  {creatorList.slice(0, 4).map((creator) => (
                     <img
                       key={creator.id}
                       src={creator.avatar}
@@ -97,6 +99,12 @@ const Index = () => {
             <div className="relative lg:pl-8">
               <div className="absolute inset-0 rounded-3xl bg-gradient-to-br from-primary/5 to-accent/5 blur-2xl" />
               <div className="relative glass-card rounded-2xl p-6 animate-float">
+                {!featuredCreator ? (
+                  <div className="text-sm text-muted-foreground">
+                    {isLoading ? "Loading creators..." : "No creators available yet."}
+                  </div>
+                ) : (
+                <div>
                 <div className="flex items-center gap-4">
                   <img
                     src={featuredCreator.avatar}
@@ -111,15 +119,21 @@ const Index = () => {
 
                 <div className="mt-4 grid grid-cols-3 gap-3">
                   <div className="rounded-lg bg-secondary/50 p-3 text-center">
-                    <p className="text-xl font-bold text-foreground">245K</p>
+                    <p className="text-xl font-bold text-foreground">
+                      {formatNumber(featuredCreator.stats.totalFollowers)}
+                    </p>
                     <p className="text-xs text-muted-foreground">Followers</p>
                   </div>
                   <div className="rounded-lg bg-secondary/50 p-3 text-center">
-                    <p className="text-xl font-bold text-foreground">34K</p>
+                    <p className="text-xl font-bold text-foreground">
+                      {formatNumber(featuredCreator.stats.avgViews)}
+                    </p>
                     <p className="text-xs text-muted-foreground">Avg Views</p>
                   </div>
                   <div className="rounded-lg bg-secondary/50 p-3 text-center">
-                    <p className="text-xl font-bold text-foreground">8.2%</p>
+                    <p className="text-xl font-bold text-foreground">
+                      {featuredCreator.stats.engagementRate}%
+                    </p>
                     <p className="text-xs text-muted-foreground">Engagement</p>
                   </div>
                 </div>
@@ -138,6 +152,8 @@ const Index = () => {
                 <Button className="mt-4 w-full" asChild>
                   <Link to={`/creator/${featuredCreator.id}`}>View Full Profile</Link>
                 </Button>
+                </div>
+                )}
               </div>
             </div>
           </div>
@@ -200,13 +216,19 @@ const Index = () => {
           </div>
 
           <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {mockCreators.slice(0, 3).map((creator) => (
-              <CreatorCard
-                key={creator.id}
-                creator={creator}
-                onRequestCollab={() => setCollabCreator(creator)}
-              />
-            ))}
+            {creatorList.length > 0 ? (
+              creatorList.slice(0, 3).map((creator) => (
+                <CreatorCard
+                  key={creator.id}
+                  creator={creator}
+                  onRequestCollab={() => setCollabCreator(creator)}
+                />
+              ))
+            ) : (
+              <div className="text-sm text-muted-foreground">
+                {isLoading ? "Loading creators..." : "No creators available yet."}
+              </div>
+            )}
           </div>
         </div>
       </section>
