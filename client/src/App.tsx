@@ -14,6 +14,7 @@ import NotFound from "./pages/NotFound";
 import Login from "./pages/Login";
 import Messaging from "./pages/Messaging";
 import Posts from "./pages/Posts";
+import Profile from "./pages/Profile";
 
 
 const queryClient = new QueryClient();
@@ -30,6 +31,14 @@ const App = () => (
             <Route path="/login" element={<Login />} />
             <Route path="/onboarding" element={<Onboarding />} />
             <Route path="/creator/:id" element={<Portfolio />} />
+            <Route
+              path="/profile"
+              element={
+                <ProtectedRoute>
+                  <Profile />
+                </ProtectedRoute>
+              }
+            />
             <Route
               path="/dashboard"
               element={

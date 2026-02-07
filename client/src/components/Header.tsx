@@ -55,10 +55,7 @@ export function Header() {
           {user ? (
             <>
               <Button variant="ghost" size="sm" asChild className="hidden sm:flex">
-                <Link
-                  to={user.creatorId ? `/creator/${user.creatorId}` : "/dashboard"}
-                  className="flex items-center gap-2"
-                >
+                <Link to="/profile" className="flex items-center gap-2">
                   <User className="h-4 w-4" />
                   My Profile
                 </Link>
