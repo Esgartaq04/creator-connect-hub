@@ -17,6 +17,10 @@ const {
   upsertUser,
   updateUserCreator,
 } = require("./services/userService.cjs");
+const {
+  getAccountByAuthUid,
+  upsertAccount,
+} = require("./services/accountService.cjs");
 const app = express();
 
 const corsOrigins = process.env.CORS_ORIGIN
@@ -71,6 +75,37 @@ app.get("/api/users/me", authMiddleware, async (req, res) => {
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Failed to fetch user." });
+  }
+});
+
+app.get("/api/accounts/me", authMiddleware, async (req, res) => {
+  try {
+    const existing = await getAccountByAuthUid(req.user.id);
+    if (existing) {
+      return res.json({
+        id: existing.id,
+        linkedAccounts: existing.linkedAccounts || [],
+      });
+    }
+
+    const creator = await getCreatorById(req.user.id);
+    const linkedAccounts = creator
+      ? Object.entries(creator.platforms || {}).map(([platform, data]) => ({
+          platform,
+          handle: data.handle,
+          url: data.handle?.startsWith("@") ? null : data.handle,
+        }))
+      : [];
+
+    await upsertAccount(req.user.id, { linkedAccounts });
+
+    res.json({
+      id: req.user.id,
+      linkedAccounts,
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Failed to fetch accounts." });
   }
 });
 

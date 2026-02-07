@@ -4,6 +4,8 @@ import { StatTile } from "@/components/StatTile";
 import { formatNumber } from "@/data/mockData";
 import { useCurrentCreator } from "@/hooks/useCurrentCreator";
 import { ExternalLink, Instagram, Music, Users, Eye, TrendingUp, Youtube } from "lucide-react";
+import { useQuery } from "@tanstack/react-query";
+import { fetchAccountProfile } from "@/services/accountService";
 
 const platformIcons: Record<string, React.ElementType> = {
   youtube: Youtube,
@@ -13,6 +15,10 @@ const platformIcons: Record<string, React.ElementType> = {
 
 export default function Profile() {
   const { data: creator, isLoading } = useCurrentCreator();
+  const { data: accountProfile } = useQuery({
+    queryKey: ["accounts", "me"],
+    queryFn: fetchAccountProfile,
+  });
 
   if (isLoading) {
     return (
@@ -114,6 +120,33 @@ export default function Profile() {
               {Object.keys(creator.platforms).length === 0 && (
                 <p className="text-sm text-muted-foreground">
                   No platforms connected yet.
+                </p>
+              )}
+            </div>
+          </div>
+
+          <div>
+            <h2 className="font-display text-lg font-semibold text-foreground">
+              Connected Accounts
+            </h2>
+            <div className="mt-4 flex flex-wrap gap-3">
+              {accountProfile?.linkedAccounts?.length ? (
+                accountProfile.linkedAccounts.map((account) => (
+                  <div
+                    key={`${account.platform}-${account.handle}`}
+                    className="inline-flex items-center gap-2 rounded-lg border border-border bg-secondary/50 px-3 py-2 text-sm text-foreground"
+                  >
+                    <span className="font-medium capitalize">
+                      {account.platform}
+                    </span>
+                    <span className="text-muted-foreground">
+                      {account.handle}
+                    </span>
+                  </div>
+                ))
+              ) : (
+                <p className="text-sm text-muted-foreground">
+                  No connected accounts yet.
                 </p>
               )}
             </div>
