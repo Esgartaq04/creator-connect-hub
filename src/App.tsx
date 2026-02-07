@@ -11,7 +11,7 @@ import Discover from "./pages/Discover";
 import NotFound from "./pages/NotFound";
 import Messaging from "./pages/Messaging";
 import Posts from "./pages/Post";
-import Network from "./pages/Network"; // <--- Add this line!
+import Network from "./pages/Network"; 
 
 
 const queryClient = new QueryClient();
