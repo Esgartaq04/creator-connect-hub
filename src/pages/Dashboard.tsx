@@ -121,7 +121,7 @@ export default function Dashboard() {
                     />
                     <Bar
                       dataKey="views"
-                      fill="hsl(var(--primary))"
+                      fill="hsl(var(--color-blue))"
                       radius={[4, 4, 0, 0]}
                     />
                   </BarChart>
