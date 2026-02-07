@@ -38,7 +38,7 @@ export default function Dashboard() {
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-8">
           <div>
             <h1 className="font-display text-2xl font-bold text-foreground">
-              Welcome back, {currentUser.name.split(" ")[0]}! 👋 adi push
+              Welcome back, {currentUser.name.split(" ")[0]}! 👋 adi push check yeho
             </h1>
             <p className="text-muted-foreground mt-1">
               Here's how your content is performing
