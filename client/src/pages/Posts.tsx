@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { Header } from "@/components/Header";
-import { ContentThumbnailCard } from "@/components/ContentThumbnailCard";
-import { currentUser } from "@/data/mockData";
+import { currentUser } from "@/data/mockData"; // Removed ContentThumbnailCard to use custom card
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -13,17 +12,52 @@ import {
   Users,
   Sparkles,
   Zap,
-  MoreHorizontal
+  MoreHorizontal,
+  Youtube,
+  Instagram,
+  Music,
+  Play,
+  Eye,
+  Heart
 } from "lucide-react";
+
+// 1. Helper Component for Platform Icons
+const PlatformIcon = ({ platform }: { platform: string }) => {
+  const p = platform.toLowerCase();
+  if (p === 'youtube') {
+    return (
+      <div className="flex items-center gap-1 bg-red-600 text-white text-[10px] font-bold px-2 py-1 rounded-md shadow-sm">
+        <Youtube className="h-3 w-3 fill-current" />
+        <span>Youtube</span>
+      </div>
+    );
+  }
+  if (p === 'instagram') {
+    return (
+      <div className="flex items-center gap-1 bg-gradient-to-tr from-yellow-400 via-red-500 to-purple-500 text-white text-[10px] font-bold px-2 py-1 rounded-md shadow-sm">
+        <Instagram className="h-3 w-3" />
+        <span>Insta</span>
+      </div>
+    );
+  }
+  if (p === 'tiktok') {
+    return (
+      <div className="flex items-center gap-1 bg-black text-white text-[10px] font-bold px-2 py-1 rounded-md shadow-sm border border-white/20">
+        <Music className="h-3 w-3" />
+        <span>TikTok</span>
+      </div>
+    );
+  }
+  return <div className="bg-gray-600 text-white p-1 rounded"><Video className="h-3 w-3" /></div>;
+};
 
 export default function Posts() {
   const [searchQuery, setSearchQuery] = useState("");
 
-  // In a real app, you'd filter the actual data based on the tabs
+  // Mock data usage
   const allPosts = currentUser.featuredContent;
   const collabPosts = allPosts.filter(post => post.title.toLowerCase().includes("collab") || post.title.toLowerCase().includes("vs"));
   
-  // Mocking some drafts since they aren't in the main data
   const drafts = [
     {
       id: "draft-1",
@@ -54,8 +88,8 @@ export default function Posts() {
           </div>
 
           <div className="flex items-center gap-3">
-            <Button variant="outline" className="hidden sm:flex">
-              <Zap className="mr-2 h-4 w-4 text-amber-500" />
+            <Button variant="outline" className="hidden sm:flex bg-background">
+              <Zap className="mr-2 h-4 w-4 text-amber-500 fill-amber-500" />
               Growth Insights
             </Button>
             <Button size="lg" className="shadow-lg shadow-primary/20">
@@ -66,26 +100,26 @@ export default function Posts() {
         </div>
 
         <div className="grid gap-8 lg:grid-cols-4">
-          {/* Main Content Area */}
+          {/* Main Content Area (3 Columns) */}
           <div className="lg:col-span-3 space-y-6">
             
-            {/* Controls */}
-            <div className="flex flex-col sm:flex-row gap-4 justify-between items-center bg-card/50 p-4 rounded-xl border border-border/50">
-              <div className="relative w-full sm:w-72">
+            {/* Search & Filters Bar */}
+            <div className="flex flex-col sm:flex-row gap-4 justify-between items-center bg-card/50 p-1.5 rounded-xl border border-border/50">
+              <div className="relative w-full">
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                 <Input 
                   placeholder="Search your posts..." 
-                  className="pl-9 bg-background/50"
+                  className="pl-9 bg-transparent border-none shadow-none focus-visible:ring-0"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                 />
               </div>
-              <div className="flex items-center gap-2 w-full sm:w-auto">
-                <Button variant="ghost" size="sm" className="ml-auto sm:ml-0">
+              <div className="flex items-center gap-1 pr-2">
+                <Button variant="ghost" size="sm" className="text-muted-foreground">
                   <Filter className="mr-2 h-4 w-4" />
                   Filter
                 </Button>
-                <Button variant="ghost" size="icon">
+                <Button variant="ghost" size="icon" className="text-muted-foreground">
                   <MoreHorizontal className="h-4 w-4" />
                 </Button>
               </div>
@@ -99,99 +133,156 @@ export default function Posts() {
                 <TabsTrigger value="drafts">Drafts</TabsTrigger>
               </TabsList>
 
+              {/* 2. Custom Card Rendering for "All Posts" */}
               <TabsContent value="all" className="space-y-6">
                 <div className="grid gap-6 sm:grid-cols-2">
                   {allPosts.map((post) => (
-                    <ContentThumbnailCard key={post.id} content={post} />
+                    <div key={post.id} className="group flex flex-col gap-3 rounded-xl bg-card border border-border p-3 hover:shadow-md transition-all">
+                      {/* Thumbnail & Icon */}
+                      <div className="relative aspect-video w-full overflow-hidden rounded-lg bg-muted">
+                        <img 
+                          src={post.thumbnail} 
+                          alt={post.title} 
+                          className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                        />
+                        <div className="absolute inset-0 bg-black/10 group-hover:bg-black/20 transition-colors" />
+                        
+                        {/* Platform Icon Overlay */}
+                        <div className="absolute top-2 right-2">
+                          <PlatformIcon platform={post.platform} />
+                        </div>
+
+                        {/* Play Button Overlay */}
+                        <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                            <div className="bg-white/20 backdrop-blur-md p-3 rounded-full shadow-lg">
+                                <Play className="h-6 w-6 text-white fill-white" />
+                            </div>
+                        </div>
+                      </div>
+
+                      {/* Info */}
+                      <div>
+                        <h3 className="font-semibold text-foreground line-clamp-1 leading-tight mb-2">{post.title}</h3>
+                        <div className="flex items-center gap-4 text-xs text-muted-foreground">
+                            <span className="flex items-center gap-1 bg-secondary/50 px-2 py-1 rounded">
+                                <Eye className="h-3 w-3" /> 
+                                {new Intl.NumberFormat('en-US', { notation: "compact" }).format(post.views)}
+                            </span>
+                            <span className="flex items-center gap-1 bg-secondary/50 px-2 py-1 rounded">
+                                <Heart className="h-3 w-3" /> 
+                                {new Intl.NumberFormat('en-US', { notation: "compact" }).format(post.likes)}
+                            </span>
+                        </div>
+                      </div>
+                    </div>
                   ))}
                 </div>
               </TabsContent>
 
               <TabsContent value="collabs" className="space-y-6">
-                <div className="flex items-center gap-2 mb-4 p-3 bg-primary/10 rounded-lg text-primary text-sm">
+                <div className="flex items-center gap-2 mb-4 p-3 bg-primary/10 rounded-lg text-primary text-sm border border-primary/20">
                   <Users className="h-4 w-4" />
                   <span>Collaborations have <strong>2.5x higher engagement</strong> on average.</span>
                 </div>
                 <div className="grid gap-6 sm:grid-cols-2">
-                  {collabPosts.length > 0 ? (
-                    collabPosts.map((post) => (
-                      <ContentThumbnailCard key={post.id} content={post} />
-                    ))
-                  ) : (
-                    <div className="col-span-full py-12 text-center text-muted-foreground">
-                      No collaborations found. Try reaching out in the Network tab!
+                  {collabPosts.map((post) => (
+                    <div key={post.id} className="group rounded-xl bg-card border border-border p-3">
+                       <div className="relative aspect-video w-full overflow-hidden rounded-lg bg-muted">
+                          <img src={post.thumbnail} alt={post.title} className="h-full w-full object-cover" />
+                          <div className="absolute top-2 right-2"><PlatformIcon platform={post.platform} /></div>
+                          <div className="absolute bottom-2 left-2 bg-primary text-primary-foreground text-[10px] font-bold px-2 py-0.5 rounded">COLLAB</div>
+                       </div>
+                       <h3 className="mt-3 font-semibold text-foreground line-clamp-1">{post.title}</h3>
+                       <p className="text-xs text-muted-foreground mt-1">vs. Competitor / Partner</p>
                     </div>
-                  )}
+                  ))}
                 </div>
               </TabsContent>
 
               <TabsContent value="drafts" className="space-y-6">
                 <div className="grid gap-6 sm:grid-cols-2">
                   {drafts.map((draft) => (
-                    // @ts-ignore - simplified mock object for draft
-                    <ContentThumbnailCard key={draft.id} content={draft} />
+                    <div key={draft.id} className="group rounded-xl bg-card border border-dashed border-border p-3 opacity-75 hover:opacity-100 transition-opacity">
+                       <div className="relative aspect-video w-full overflow-hidden rounded-lg bg-muted grayscale">
+                          <img src={draft.thumbnail} alt={draft.title} className="h-full w-full object-cover" />
+                          <div className="absolute inset-0 flex items-center justify-center bg-black/20">
+                            <span className="bg-background/90 text-foreground px-2 py-1 rounded text-xs font-mono">DRAFT</span>
+                          </div>
+                       </div>
+                       <h3 className="mt-3 font-medium text-foreground line-clamp-1">{draft.title}</h3>
+                       <p className="text-xs text-muted-foreground mt-1">{draft.date}</p>
+                    </div>
                   ))}
                   
-                  {/* Empty State / Add New Placeholder */}
-                  <button className="group relative flex flex-col items-center justify-center rounded-xl border-2 border-dashed border-muted-foreground/25 bg-muted/50 p-6 text-center hover:border-primary/50 hover:bg-primary/5 transition-all h-[280px]">
-                    <div className="rounded-full bg-background p-4 shadow-sm group-hover:scale-110 transition-transform">
-                      <Video className="h-6 w-6 text-muted-foreground group-hover:text-primary" />
+                  {/* Create New Draft Button */}
+                  <button className="flex flex-col items-center justify-center rounded-xl border-2 border-dashed border-muted-foreground/25 bg-muted/30 p-6 text-center hover:border-primary/50 hover:bg-primary/5 transition-all min-h-[200px]">
+                    <div className="rounded-full bg-background p-3 shadow-sm mb-3">
+                      <Video className="h-5 w-5 text-muted-foreground" />
                     </div>
-                    <h3 className="mt-4 font-semibold text-foreground">Create New Draft</h3>
-                    <p className="mt-1 text-sm text-muted-foreground">Start working on your next big idea</p>
+                    <span className="text-sm font-medium">Create Draft</span>
                   </button>
                 </div>
               </TabsContent>
             </Tabs>
           </div>
 
-          {/* Right Sidebar - Growth Tools */}
+          {/* 3. Right Sidebar - Quick Overview */}
           <div className="space-y-6">
-            {/* Quick Stats */}
+            
+            {/* Performance Card */}
             <div className="glass-card rounded-2xl p-6">
-              <h3 className="font-display font-semibold mb-4 flex items-center gap-2">
+              <div className="flex items-center gap-2 mb-6">
                 <Sparkles className="h-4 w-4 text-primary" />
-                Performance
-              </h3>
-              <div className="space-y-4">
-                <div className="flex justify-between items-center">
-                  <span className="text-sm text-muted-foreground">Views (30d)</span>
-                  <span className="font-bold text-foreground">+12.4K</span>
+                <h3 className="font-display font-semibold text-foreground">Performance</h3>
+              </div>
+              
+              <div className="space-y-6">
+                <div>
+                  <div className="flex justify-between items-end mb-2">
+                    <span className="text-sm text-muted-foreground">Views (30d)</span>
+                    <span className="font-bold text-foreground text-lg">+12.4K</span>
+                  </div>
+                  <div className="w-full bg-secondary h-2 rounded-full overflow-hidden">
+                    <div className="bg-primary h-full w-[70%] rounded-full" />
+                  </div>
                 </div>
-                <div className="w-full bg-secondary h-2 rounded-full overflow-hidden">
-                  <div className="bg-primary h-full w-[70%]" />
-                </div>
-                <div className="flex justify-between items-center mt-2">
-                  <span className="text-sm text-muted-foreground">Collabs</span>
-                  <span className="font-bold text-foreground">2 Active</span>
+
+                <div className="flex items-center justify-between pt-4 border-t border-border">
+                  <span className="text-sm text-muted-foreground">Active Collabs</span>
+                  <span className="font-semibold text-foreground">2 Active</span>
                 </div>
               </div>
             </div>
 
-            {/* Suggested Actions */}
+            {/* Growth Tips Card */}
             <div className="glass-card rounded-2xl p-6">
-              <h3 className="font-display font-semibold mb-4">Grow Your Reach</h3>
+              <h3 className="font-display font-semibold mb-4 text-foreground">Grow Your Reach</h3>
               <ul className="space-y-4">
-                <li className="flex gap-3 items-start">
-                  <div className="mt-1 h-2 w-2 rounded-full bg-green-500 shrink-0" />
+                <li className="flex gap-3 items-start group cursor-pointer">
+                  <div className="mt-1.5 h-2 w-2 rounded-full bg-green-500 shrink-0 group-hover:scale-125 transition-transform" />
                   <div className="text-sm">
-                    <p className="font-medium text-foreground">Post a Short today</p>
-                    <p className="text-muted-foreground text-xs mt-1">Short-form content is trending up 15% this week.</p>
+                    <p className="font-medium text-foreground group-hover:text-primary transition-colors">Post a Short today</p>
+                    <p className="text-muted-foreground text-xs mt-1 leading-relaxed">
+                      Short-form content is trending up <strong>15%</strong> this week.
+                    </p>
                   </div>
                 </li>
-                <li className="flex gap-3 items-start">
-                  <div className="mt-1 h-2 w-2 rounded-full bg-blue-500 shrink-0" />
+                <li className="flex gap-3 items-start group cursor-pointer">
+                  <div className="mt-1.5 h-2 w-2 rounded-full bg-blue-500 shrink-0 group-hover:scale-125 transition-transform" />
                   <div className="text-sm">
-                    <p className="font-medium text-foreground">Reply to comments</p>
-                    <p className="text-muted-foreground text-xs mt-1">You have 12 unread comments on your latest video.</p>
+                    <p className="font-medium text-foreground group-hover:text-primary transition-colors">Reply to comments</p>
+                    <p className="text-muted-foreground text-xs mt-1 leading-relaxed">
+                      You have <strong>12 unread</strong> comments on your latest video.
+                    </p>
                   </div>
                 </li>
               </ul>
-              <Button variant="link" className="w-full mt-2 text-xs h-auto p-0">
+              <Button variant="link" className="w-full mt-4 text-xs h-auto p-0 text-muted-foreground hover:text-primary">
                 View all suggestions
               </Button>
             </div>
           </div>
+
         </div>
       </main>
     </div>
