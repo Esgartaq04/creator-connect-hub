@@ -63,7 +63,7 @@ const Index = () => {
 
               <div className="mt-8 flex flex-wrap gap-4">
                 <Button size="lg" asChild className="text-base">
-                  <Link to="/login">
+                  <Link to="/login?mode=register">
                     Get started
                     <ArrowRight className="ml-2 h-5 w-5" />
                   </Link>
@@ -106,7 +106,7 @@ const Index = () => {
                 </div>
 
                 <Button className="mt-6 w-full" asChild>
-                  <Link to="/login">Unlock dashboard</Link>
+                  <Link to="/login?mode=register">Unlock dashboard</Link>
                 </Button>
               </div>
             </div>
@@ -159,7 +159,7 @@ const Index = () => {
             Join hundreds of creators building their audience and finding meaningful collaborations.
           </p>
           <Button size="lg" className="mt-6" asChild>
-            <Link to="/login">
+            <Link to="/login?mode=register">
               Get Started Free
               <ArrowRight className="ml-2 h-5 w-5" />
             </Link>
