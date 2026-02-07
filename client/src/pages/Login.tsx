@@ -18,14 +18,28 @@ export default function Login() {
   const navigate = useNavigate();
   const { login, register } = useAuth();
   const [mode, setMode] = useState<"login" | "register">("login");
+<<<<<<< Updated upstream
   const [displayName, setDisplayName] = useState("");
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
+=======
+  
+  // Existing state
+>>>>>>> Stashed changes
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
   const [dateOfBirth, setDateOfBirth] = useState("");
   const [password, setPassword] = useState("");
+<<<<<<< Updated upstream
   const [videoTypes, setVideoTypes] = useState<string[]>([]);
+=======
+  
+  // 1. Add new state for registration fields
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [phoneNumber, setPhoneNumber] = useState("");
+
+>>>>>>> Stashed changes
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -69,6 +83,7 @@ export default function Login() {
       if (mode === "login") {
         await login(email, password);
       } else {
+<<<<<<< Updated upstream
         await register(email, password, {
           name: displayName,
           firstName,
@@ -77,6 +92,10 @@ export default function Login() {
           dateOfBirth,
           videoTypes,
         });
+=======
+        // 2. Pass the new state values to the register function
+        await register(email, password, firstName, lastName, phoneNumber);
+>>>>>>> Stashed changes
       }
       navigate("/dashboard");
     } catch (err) {
@@ -104,6 +123,7 @@ export default function Login() {
             </CardHeader>
             <CardContent>
               <form onSubmit={handleSubmit} className="space-y-5">
+<<<<<<< Updated upstream
                 {isRegistering && (
                   <>
                     <div className="space-y-2">
@@ -140,17 +160,46 @@ export default function Login() {
                     </div>
                   </>
                 )}
+=======
+                {/* 3. Render Name fields only during registration */}
+                {mode === "register" && (
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <Label htmlFor="firstName">First Name</Label>
+                      <Input
+                        id="firstName"
+                        placeholder="Guillermo"
+                        value={firstName}
+                        onChange={(e) => setFirstName(e.target.value)}
+                        required
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="lastName">Last Name</Label>
+                      <Input
+                        id="lastName"
+                        placeholder="Ramirez"
+                        value={lastName}
+                        onChange={(e) => setLastName(e.target.value)}
+                        required
+                      />
+                    </div>
+                  </div>
+                )}
+
+>>>>>>> Stashed changes
                 <div className="space-y-2">
                   <Label htmlFor="email">Email</Label>
                   <Input
                     id="email"
                     type="email"
-                    placeholder="you@example.com"
+                    placeholder="you@uic.edu"
                     value={email}
                     onChange={(event) => setEmail(event.target.value)}
                     required
                   />
                 </div>
+<<<<<<< Updated upstream
                 {isRegistering && (
                   <div className="space-y-2">
                     <Label htmlFor="phone">Phone number</Label>
@@ -176,6 +225,24 @@ export default function Login() {
                     />
                   </div>
                 )}
+=======
+
+                {/* 4. Render Phone field only during registration */}
+                {mode === "register" && (
+                  <div className="space-y-2">
+                    <Label htmlFor="phone">Phone Number</Label>
+                    <Input
+                      id="phone"
+                      type="tel"
+                      placeholder="(312) 555-0123"
+                      value={phoneNumber}
+                      onChange={(e) => setPhoneNumber(e.target.value)}
+                      required
+                    />
+                  </div>
+                )}
+
+>>>>>>> Stashed changes
                 <div className="space-y-2">
                   <Label htmlFor="password">Password</Label>
                   <Input
@@ -187,6 +254,7 @@ export default function Login() {
                     required
                   />
                 </div>
+<<<<<<< Updated upstream
                 {isRegistering && (
                   <div className="space-y-2">
                     <Label>Types of videos you make</Label>
@@ -217,6 +285,9 @@ export default function Login() {
                     </DropdownMenu>
                   </div>
                 )}
+=======
+
+>>>>>>> Stashed changes
                 {error && (
                   <p className="text-sm text-destructive">{error}</p>
                 )}
@@ -232,6 +303,7 @@ export default function Login() {
                       : "Create account"}
                 </Button>
               </form>
+              
               <div className="mt-4 text-center text-sm text-muted-foreground">
                 {mode === "login" ? (
                   <>
