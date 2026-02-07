@@ -59,6 +59,23 @@ useEffect(() => {
         createdAt: new Date().toISOString()
       });
 
+      //They need a creators profile, so we make a new one for them
+      await setDoc(doc(db, "creators", uid), {
+      name: `${first_name} ${last_name}`,
+      bio: "New creator on the platform!",
+      niche: [],
+      level: 1,
+      levelName: "Newcomer", // Standard starting level
+      stats: { avgViews: 0, engagementRate: 0, totalFollowers: 0 }
+      });
+
+      //We also add a new data for their analytics standing
+      await setDoc(doc(db, "analytics", uid), {
+      weeklyViews: [],
+      growthTrend: [],
+      insights: []
+      });
+
       console.log("User was created into database! Welcome :)");
     } catch (error: any) {
     console.error("NOOO... Registration failed:", error.message);
