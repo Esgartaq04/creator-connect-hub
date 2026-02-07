@@ -10,6 +10,7 @@ import Dashboard from "./pages/Dashboard";
 import Discover from "./pages/Discover";
 import NotFound from "./pages/NotFound";
 
+
 const queryClient = new QueryClient();
 
 const App = () => (
