@@ -8,13 +8,13 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 import { Slider } from "@/components/ui/slider";
 import {
-  mockCreators,
   niches,
   collaborationTypes,
   levelNames,
   Creator,
 } from "@/data/mockData";
 import { Search, SlidersHorizontal, X } from "lucide-react";
+import { useCreators } from "@/hooks/useCreators";
 
 export default function Discover() {
   const [search, setSearch] = useState("");
@@ -23,6 +23,8 @@ export default function Discover() {
   const [levelRange, setLevelRange] = useState([1, 5]);
   const [showFilters, setShowFilters] = useState(false);
   const [collabCreator, setCollabCreator] = useState<Creator | null>(null);
+  const { data: creators, isLoading } = useCreators();
+  const creatorList = creators ?? [];
 
   const toggleNiche = (niche: string) => {
     setSelectedNiches((prev) =>
@@ -43,7 +45,7 @@ export default function Discover() {
     setLevelRange([1, 5]);
   };
 
-  const filteredCreators = mockCreators.filter((creator) => {
+  const filteredCreators = creatorList.filter((creator) => {
     // Search filter
     if (
       search &&
@@ -263,7 +265,9 @@ export default function Discover() {
             ) : (
               <div className="text-center py-12">
                 <p className="text-muted-foreground">
-                  No creators found matching your filters.
+                  {isLoading
+                    ? "Loading creators..."
+                    : "No creators found matching your filters."}
                 </p>
                 <Button
                   variant="link"

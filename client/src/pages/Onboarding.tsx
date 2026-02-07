@@ -15,6 +15,9 @@ import {
 } from "@/components/ui/select";
 import { niches, collaborationTypes } from "@/data/mockData";
 import { Sparkles, Youtube, Instagram, Music } from "lucide-react";
+import { createCreator } from "@/services/creatorService";
+import { initializeAnalytics } from "@/services/analyticsService";
+import { useAuth } from "@/context/AuthContext";
 
 const platforms = [
   { id: "youtube", label: "YouTube", icon: Youtube },
@@ -24,6 +27,9 @@ const platforms = [
 
 export default function Onboarding() {
   const navigate = useNavigate();
+  const { user } = useAuth();
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
   const [formData, setFormData] = useState({
     name: "",
     bio: "",
@@ -50,10 +56,26 @@ export default function Onboarding() {
     }));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // In a real app, this would save to backend
-    navigate("/creator/1");
+    setIsSubmitting(true);
+    setSubmitError(null);
+    try {
+      const creatorId = await createCreator({
+        name: formData.name.trim(),
+        bio: formData.bio.trim(),
+        niche: formData.niche,
+        platforms: formData.platforms,
+        collaborationGoals: formData.collaborationGoals,
+      });
+      await initializeAnalytics(creatorId);
+      navigate(`/creator/${creatorId}`);
+    } catch (error) {
+      console.error(error);
+      setSubmitError("Failed to create your profile. Please try again.");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const isValid =
@@ -62,6 +84,22 @@ export default function Onboarding() {
     formData.niche &&
     formData.platforms.length > 0 &&
     formData.collaborationGoals.length > 0;
+
+  if (!user) {
+    return (
+      <div className="min-h-screen bg-background">
+        <Header />
+        <main className="container py-12">
+          <p className="text-sm text-muted-foreground">
+            Please log in to create your profile.
+          </p>
+          <Button className="mt-4" onClick={() => navigate("/login")}>
+            Go to Login
+          </Button>
+        </main>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-background">
@@ -219,11 +257,14 @@ export default function Onboarding() {
               type="submit"
               size="lg"
               className="w-full text-base"
-              disabled={!isValid}
+              disabled={!isValid || isSubmitting}
             >
               <Sparkles className="mr-2 h-5 w-5" />
-              Generate My Portfolio
+              {isSubmitting ? "Creating Profile..." : "Generate My Portfolio"}
             </Button>
+            {submitError && (
+              <p className="text-sm text-destructive text-center">{submitError}</p>
+            )}
           </form>
         </div>
       </main>

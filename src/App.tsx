@@ -9,6 +9,9 @@ import Portfolio from "./pages/Portfolio";
 import Dashboard from "./pages/Dashboard";
 import Discover from "./pages/Discover";
 import NotFound from "./pages/NotFound";
+import Messaging from "./pages/Messaging";
+import Posts from "./pages/Post";
+import Network from "./pages/Network"; // <--- Add this line!
 
 
 const queryClient = new QueryClient();
@@ -25,6 +28,9 @@ const App = () => (
           <Route path="/creator/:id" element={<Portfolio />} />
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/discover" element={<Discover />} />
+          <Route path="/messaging" element={<Messaging />} />
+          <Route path="/posts" element={<Posts />} />
+          <Route path="/network" element={<Network />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>

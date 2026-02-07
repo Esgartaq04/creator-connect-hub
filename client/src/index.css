@@ -1,0 +1,118 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Creator Platform Design System
+   Modern, creator-friendly with glassmorphism effects
+   Coral accent, slate neutrals, warm and approachable
+*/
+
+@layer base {
+  :root {
+    /* --- Light Mode Defaults (Kept as is) --- */
+    --color-blue: 220 85% 32%;
+    --color-teal: 173 58% 39%;
+    --color-coral: 16 85% 62%;
+    --color-purple: 280 65% 60%;
+    
+    --background: 210 20% 98%;
+    --foreground: 222 47% 11%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 222 47% 11%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 222 47% 11%;
+
+    --primary: 220 85% 32%; /* Default Blue */
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 220 14% 96%;
+    --secondary-foreground: 222 47% 11%;
+
+    --muted: 220 14% 96%;
+    --muted-foreground: 215 16% 47%;
+
+    --accent: 280 65% 60%;
+    --accent-foreground: 0 0% 100%;
+
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 220 13% 91%;
+    --input: 220 13% 91%;
+    --ring: 220 85% 32%;
+
+    --radius: 0.75rem;
+  }
+
+  .dark {
+    /* --- Dark Mode (Black & Blue Theme) --- */
+    /* Background: Very Deep Blue/Black */
+    --background: 222 47% 6%;
+    --foreground: 210 40% 98%; /* White Text */
+
+    /* Cards: Slightly lighter for depth */
+    --card: 222 47% 8%;
+    --card-foreground: 210 40% 98%;
+
+    --popover: 222 47% 8%;
+    --popover-foreground: 210 40% 98%;
+
+    /* Primary: Electric Blue (High Visibility) */
+    --primary: 217 91% 60%;
+    --primary-foreground: 222 47% 11%;
+
+    /* Secondary: Dark Slate */
+    --secondary: 217 33% 17%;
+    --secondary-foreground: 210 40% 98%;
+
+    --muted: 217 33% 17%;
+    --muted-foreground: 215 20% 65%;
+
+    /* Accent: Cyan/Teal */
+    --accent: 190 90% 50%;
+    --accent-foreground: 222 47% 11%;
+
+    --destructive: 0 63% 31%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 217 33% 17%;
+    --input: 217 33% 17%;
+    --ring: 217 91% 60%;
+  }
+  
+  /* Force text color application */
+  body {
+    background-color: hsl(var(--background));
+    color: hsl(var(--foreground));
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply font-sans antialiased;
+  }
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Outfit', sans-serif;
+  }
+}
+
+@layer components {
+  .glass-card {
+    @apply bg-white/70 backdrop-blur-xl border border-white/30 shadow-lg dark:bg-slate-900/70 dark:border-slate-800/50;
+  }
+  
+  .glass-card-hover {
+    @apply glass-card transition-all duration-300 hover:bg-white/80 hover:shadow-xl hover:-translate-y-1 dark:hover:bg-slate-800/80;
+  }
+  
+  .gradient-text {
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-primary to-accent;
+  }
+}

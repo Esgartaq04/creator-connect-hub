@@ -2,7 +2,7 @@ import { Header } from "@/components/Header";
 import { StatTile } from "@/components/StatTile";
 import { ContentThumbnailCard } from "@/components/ContentThumbnailCard";
 import { LevelBadge } from "@/components/LevelBadge";
-import { currentUser, analyticsData, levelDescriptions, formatNumber } from "@/data/mockData";
+import { levelDescriptions, formatNumber } from "@/data/mockData";
 import {
   Eye,
   TrendingUp,
@@ -27,18 +27,56 @@ import {
   BarChart,
   Bar,
 } from "recharts";
+import { useCurrentCreator } from "@/hooks/useCurrentCreator";
+import { useAnalytics } from "@/hooks/useAnalytics";
 
 export default function Dashboard() {
+  const { data: currentUser, isLoading: isUserLoading } = useCurrentCreator();
+  const { data: analyticsData, isLoading: isAnalyticsLoading } = useAnalytics(
+    currentUser?.id
+  );
+
+  if (isUserLoading) {
+    return (
+      <div className="min-h-screen bg-background">
+        <Header />
+        <main className="container py-10">
+          <p className="text-sm text-muted-foreground">Loading dashboard...</p>
+        </main>
+      </div>
+    );
+  }
+
+  if (!currentUser) {
+    return (
+      <div className="min-h-screen bg-background">
+        <Header />
+        <main className="container py-10">
+          <p className="text-sm text-muted-foreground">
+            No creator profile found yet.
+          </p>
+        </main>
+      </div>
+    );
+  }
+
+  const analytics = analyticsData ?? {
+    weeklyViews: [],
+    growthTrend: [],
+    topContent: [],
+    insights: [],
+  };
+
   return (
     <div className="min-h-screen bg-background">
       <Header />
 
       <main className="container py-10">
         {/* Welcome Header */}
-        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-8">
+        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-8"> 
           <div>
             <h1 className="font-display text-2xl font-bold text-foreground">
-              Welcome back, {currentUser.name.split(" ")[0]}! 👋
+              Welcome back, {currentUser.name.split(" ")[0]}! 👋 
             </h1>
             <p className="text-muted-foreground mt-1">
               Here's how your content is performing
@@ -105,7 +143,7 @@ export default function Dashboard() {
               </div>
               <div className="h-64">
                 <ResponsiveContainer width="100%" height="100%">
-                  <BarChart data={analyticsData.weeklyViews}>
+                  <BarChart data={analytics.weeklyViews}>
                     <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
                     <XAxis
                       dataKey="day"
@@ -119,9 +157,11 @@ export default function Dashboard() {
                       axisLine={false}
                       tickFormatter={(value) => formatNumber(value)}
                     />
+
+                    {/* weekly view bars cloumns */}
                     <Bar
                       dataKey="views"
-                      fill="hsl(var(--primary))"
+                      fill="hsl(var(--color-blue))"
                       radius={[4, 4, 0, 0]}
                     />
                   </BarChart>
@@ -139,7 +179,7 @@ export default function Dashboard() {
               </div>
               <div className="h-64">
                 <ResponsiveContainer width="100%" height="100%">
-                  <LineChart data={analyticsData.growthTrend}>
+                  <LineChart data={analytics.growthTrend}>
                     <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
                     <XAxis
                       dataKey="month"
@@ -178,7 +218,7 @@ export default function Dashboard() {
                 </h2>
               </div>
               <div className="space-y-4">
-                {analyticsData.insights.map((insight, index) => (
+                {analytics.insights.map((insight, index) => (
                   <div
                     key={index}
                     className="flex items-center justify-between rounded-lg bg-secondary/50 p-3"
@@ -208,9 +248,17 @@ export default function Dashboard() {
                 Best Performing
               </h2>
               <div className="space-y-3">
-                {analyticsData.topContent.slice(0, 2).map((content) => (
-                  <ContentThumbnailCard key={content.id} content={content} />
-                ))}
+                {analytics.topContent.length > 0 ? (
+                  analytics.topContent.slice(0, 2).map((content) => (
+                    <ContentThumbnailCard key={content.id} content={content} />
+                  ))
+                ) : (
+                  <p className="text-sm text-muted-foreground">
+                    {isAnalyticsLoading
+                      ? "Loading analytics..."
+                      : "No content data yet."}
+                  </p>
+                )}
               </div>
             </div>
           </div>
