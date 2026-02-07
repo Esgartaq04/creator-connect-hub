@@ -11,7 +11,21 @@
 
 @layer base {
   :root {
-    --background: 210 20% 98%;
+
+    /* colors */
+    /* color , sat, light */
+    --color-blue: 220 85% 32%;
+    --color-teal: 173 58% 39%;
+    --color-coral: 16 85% 62%;
+    --color-purple: 280 65% 60%;
+    --color-amber: 45 93% 47%;
+    --color-red: 0 84% 60%;
+    --color-green: 142 76% 36%;
+
+    --back_color: 210 20% 98%;
+
+
+    --background: var(--back_color);
     --foreground: 222 47% 11%;
 
     --card: 0 0% 100%;
@@ -21,7 +35,7 @@
     --popover-foreground: 222 47% 11%;
 
     /* Warm coral primary */
-    --primary: 16 85% 62%;
+    --primary: var(--color-blue);
     --primary-foreground: 0 0% 100%;
 
     /* Soft slate secondary */
@@ -32,7 +46,7 @@
     --muted-foreground: 215 16% 47%;
 
     /* Teal accent for variety */
-    --accent: 173 58% 39%;
+    --accent: vsar(--color-teal);
     --accent-foreground: 0 0% 100%;
 
     --destructive: 0 84% 60%;
