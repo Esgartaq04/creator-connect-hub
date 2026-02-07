@@ -1,22 +1,4 @@
-const path = require("path");
-const admin = require("firebase-admin");
-
-const serviceAccountPath = process.env.FIREBASE_SERVICE_ACCOUNT_PATH;
-
-if (!serviceAccountPath) {
-  console.error(
-    "Missing FIREBASE_SERVICE_ACCOUNT_PATH env var pointing to a service account JSON file."
-  );
-  process.exit(1);
-}
-
-const serviceAccount = require(path.resolve(serviceAccountPath));
-
-admin.initializeApp({
-  credential: admin.credential.cert(serviceAccount),
-});
-
-const db = admin.firestore();
+const { db } = require("../lib/firebaseAdmin.cjs");
 
 const creatorsData = [
   {

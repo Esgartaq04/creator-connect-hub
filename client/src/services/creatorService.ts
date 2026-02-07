@@ -1,13 +1,36 @@
-import {
-  addDoc,
-  collection,
-  doc,
-  getDoc,
-  getDocs,
-} from "firebase/firestore";
-import { db } from "@/lib/firebase";
 import type { Creator } from "@/data/mockData";
 import { levelNames } from "@/data/mockData";
+
+const API_BASE_URL =
+  import.meta.env.VITE_API_BASE_URL || "http://localhost:5174";
+
+class ApiError extends Error {
+  status: number;
+
+  constructor(message: string, status: number) {
+    super(message);
+    this.status = status;
+  }
+}
+
+const request = async <T>(
+  path: string,
+  options?: RequestInit
+): Promise<T> => {
+  const response = await fetch(`${API_BASE_URL}${path}`, {
+    headers: {
+      "Content-Type": "application/json",
+    },
+    ...options,
+  });
+
+  if (!response.ok) {
+    const message = await response.text();
+    throw new ApiError(message || "Request failed", response.status);
+  }
+
+  return response.json() as Promise<T>;
+};
 
 const defaultStats = {
   avgViews: 0,
@@ -54,17 +77,20 @@ const toCreator = (id: string, data: Partial<Creator>): Creator => {
 };
 
 export async function getCreators(): Promise<Creator[]> {
-  const snapshot = await getDocs(collection(db, "creators"));
-  return snapshot.docs.map((docSnap) =>
-    toCreator(docSnap.id, docSnap.data() as Partial<Creator>)
-  );
+  const creators = await request<Creator[]>("/api/creators");
+  return creators.map((creator) => toCreator(creator.id, creator));
 }
 
 export async function getCreatorById(id: string): Promise<Creator | null> {
-  const docRef = doc(db, "creators", id);
-  const snapshot = await getDoc(docRef);
-  if (!snapshot.exists()) return null;
-  return toCreator(snapshot.id, snapshot.data() as Partial<Creator>);
+  try {
+    const creator = await request<Creator>(`/api/creators/${id}`);
+    return toCreator(creator.id, creator);
+  } catch (error) {
+    if (error instanceof ApiError && error.status === 404) {
+      return null;
+    }
+    throw error;
+  }
 }
 
 export interface CreateCreatorInput {
@@ -92,21 +118,9 @@ const buildPlatformStats = (platforms: string[], handle: string) => {
 };
 
 export async function createCreator(input: CreateCreatorInput): Promise<string> {
-  const level: Creator["level"] = 1;
-  const handle = toHandle(input.name);
-  const creator: Omit<Creator, "id"> = {
-    name: input.name,
-    avatar: defaultCreator.avatar,
-    bio: input.bio,
-    niche: [input.niche],
-    level,
-    levelName: levelNames[level],
-    platforms: buildPlatformStats(input.platforms, handle),
-    stats: defaultStats,
-    collaborationGoals: input.collaborationGoals,
-    featuredContent: [],
-  };
-
-  const docRef = await addDoc(collection(db, "creators"), creator);
-  return docRef.id;
+  const response = await request<{ id: string }>("/api/creators", {
+    method: "POST",
+    body: JSON.stringify(input),
+  });
+  return response.id;
 }
