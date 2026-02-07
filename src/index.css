@@ -4,29 +4,15 @@
 
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@500;600;700&display=swap');
 
-/* Creator Platform Design System
-   Modern, creator-friendly with glassmorphism effects
-   Coral accent, slate neutrals, warm and approachable
-*/
-
 @layer base {
   :root {
-
-    /* colors */
-    /* color , sat, light */
+    /* --- Light Mode Defaults (Kept as is) --- */
     --color-blue: 220 85% 32%;
     --color-teal: 173 58% 39%;
     --color-coral: 16 85% 62%;
     --color-purple: 280 65% 60%;
-    --color-amber: 45 93% 47%;
-    --color-red: 0 84% 60%;
-    --color-green: 142 76% 36%;
-
-    --back_color: 210 20% 98%;
-    /* --back_color: 210 80% 78%; */
-
-
-    --background: var(--back_color);
+    
+    --background: 210 20% 98%;
     --foreground: 222 47% 11%;
 
     --card: 0 0% 100%;
@@ -35,19 +21,16 @@
     --popover: 0 0% 100%;
     --popover-foreground: 222 47% 11%;
 
-    /* Warm coral primary */
-    --primary: var(--color-blue);
+    --primary: 220 85% 32%; /* Default Blue */
     --primary-foreground: 0 0% 100%;
 
-    /* Soft slate secondary */
     --secondary: 220 14% 96%;
     --secondary-foreground: 222 47% 11%;
 
     --muted: 220 14% 96%;
     --muted-foreground: 215 16% 47%;
 
-    /* Teal accent for variety */
-    --accent: var(--color-purple);
+    --accent: 280 65% 60%;
     --accent-foreground: 0 0% 100%;
 
     --destructive: 0 84% 60%;
@@ -55,77 +38,51 @@
 
     --border: 220 13% 91%;
     --input: 220 13% 91%;
-    --ring: 16 85% 62%;
+    --ring: 220 85% 32%;
 
     --radius: 0.75rem;
-
-    /* Creator level colors */
-    --level-1: 220 14% 60%;
-    --level-2: 173 58% 39%;
-    --level-3: 16 85% 62%;
-    --level-4: 280 65% 60%;
-    --level-5: 45 93% 47%;
-
-    /* Glassmorphism */
-    --glass-bg: 0 0% 100% / 0.7;
-    --glass-border: 0 0% 100% / 0.3;
-    --glass-shadow: 222 47% 11% / 0.08;
-
-    /* Gradients */
-    --gradient-hero: linear-gradient(135deg, hsl(16 85% 62% / 0.1) 0%, hsl(173 58% 39% / 0.1) 100%);
-    --gradient-card: linear-gradient(180deg, hsl(0 0% 100% / 0.9) 0%, hsl(0 0% 100% / 0.7) 100%);
-
-    --sidebar-background: 0 0% 98%;
-    --sidebar-foreground: 240 5.3% 26.1%;
-    --sidebar-primary: 16 85% 62%;
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 220 14% 96%;
-    --sidebar-accent-foreground: 222 47% 11%;
-    --sidebar-border: 220 13% 91%;
-    --sidebar-ring: 16 85% 62%;
   }
 
   .dark {
+    /* --- Dark Mode (Black & Blue Theme) --- */
+    /* Background: Very Deep Blue/Black */
     --background: 222 47% 6%;
-    --foreground: 210 40% 98%;
+    --foreground: 210 40% 98%; /* White Text */
 
+    /* Cards: Slightly lighter for depth */
     --card: 222 47% 8%;
     --card-foreground: 210 40% 98%;
 
     --popover: 222 47% 8%;
     --popover-foreground: 210 40% 98%;
 
-    --primary: 16 85% 62%;
-    --primary-foreground: 0 0% 100%;
+    /* Primary: Electric Blue (High Visibility) */
+    --primary: 217 91% 60%;
+    --primary-foreground: 222 47% 11%;
 
+    /* Secondary: Dark Slate */
     --secondary: 217 33% 17%;
     --secondary-foreground: 210 40% 98%;
 
     --muted: 217 33% 17%;
     --muted-foreground: 215 20% 65%;
 
-    --accent: 173 58% 39%;
-    --accent-foreground: 0 0% 100%;
+    /* Accent: Cyan/Teal */
+    --accent: 190 90% 50%;
+    --accent-foreground: 222 47% 11%;
 
     --destructive: 0 63% 31%;
     --destructive-foreground: 210 40% 98%;
 
     --border: 217 33% 17%;
     --input: 217 33% 17%;
-    --ring: 16 85% 62%;
-
-    --glass-bg: 222 47% 11% / 0.7;
-    --glass-border: 0 0% 100% / 0.1;
-    --glass-shadow: 0 0% 0% / 0.3;
-
-    --sidebar-background: 222 47% 6%;
-    --sidebar-foreground: 210 40% 98%;
-    --sidebar-primary: 16 85% 62%;
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 217 33% 17%;
-    --sidebar-accent-foreground: 210 40% 98%;
-    --sidebar-border: 217 33% 17%;
-    --sidebar-ring: 16 85% 62%;
+    --ring: 217 91% 60%;
+  }
+  
+  /* Force text color application */
+  body {
+    background-color: hsl(var(--background));
+    color: hsl(var(--foreground));
   }
 }
 
@@ -133,12 +90,9 @@
   * {
     @apply border-border;
   }
-
   body {
-    @apply bg-background text-foreground font-sans antialiased;
-    font-family: 'Inter', sans-serif;
+    @apply font-sans antialiased;
   }
-
   h1, h2, h3, h4, h5, h6 {
     font-family: 'Outfit', sans-serif;
   }
@@ -146,32 +100,14 @@
 
 @layer components {
   .glass-card {
-    @apply bg-white/70 backdrop-blur-xl border border-white/30 shadow-lg;
+    @apply bg-white/70 backdrop-blur-xl border border-white/30 shadow-lg dark:bg-slate-900/70 dark:border-slate-800/50;
   }
-
+  
   .glass-card-hover {
-    @apply glass-card transition-all duration-300 hover:bg-white/80 hover:shadow-xl hover:-translate-y-1;
+    @apply glass-card transition-all duration-300 hover:bg-white/80 hover:shadow-xl hover:-translate-y-1 dark:hover:bg-slate-800/80;
   }
-
-  .gradient-hero {
-    background: linear-gradient(135deg, hsl(16 85% 62% / 0.08) 0%, hsl(173 58% 39% / 0.08) 100%);
-  }
-
+  
   .gradient-text {
     @apply bg-clip-text text-transparent bg-gradient-to-r from-primary to-accent;
-  }
-
-  .stat-glow {
-    @apply relative;
-  }
-
-  .stat-glow::after {
-    content: '';
-    @apply absolute inset-0 rounded-xl opacity-0 transition-opacity duration-300;
-    background: radial-gradient(circle at center, hsl(16 85% 62% / 0.15) 0%, transparent 70%);
-  }
-
-  .stat-glow:hover::after {
-    @apply opacity-100;
   }
 }
