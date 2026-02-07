@@ -19,13 +19,11 @@ export default function Login() {
   const { login, register } = useAuth();
   const [mode, setMode] = useState<"login" | "register">("login");
   
-  // Existing state
+  // Form state
   const [email, setEmail] = useState("");
-  const [phone, setPhone] = useState("");
-  const [dateOfBirth, setDateOfBirth] = useState("");
   const [password, setPassword] = useState("");
   
-  // 1. Add new state for registration fields
+  // Registration-only fields
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
@@ -35,35 +33,12 @@ export default function Login() {
 
   const isRegistering = mode === "register";
   const isFormValid = isRegistering
-    ? displayName.trim() &&
-      firstName.trim() &&
+    ? firstName.trim() &&
       lastName.trim() &&
       email.trim() &&
-      phone.trim() &&
-      dateOfBirth.trim() &&
-      password.trim() &&
-      videoTypes.length > 0
+      phoneNumber.trim() &&
+      password.trim()
     : email.trim() && password.trim();
-  const videoTypeOptions = [
-    "Education",
-    "Gaming",
-    "Vlogs",
-    "Tech",
-    "Lifestyle",
-    "Comedy",
-    "Beauty",
-    "Fitness",
-    "Food",
-    "Music",
-    "Travel",
-    "Finance",
-  ];
-
-  const toggleVideoType = (type: string) => {
-    setVideoTypes((prev) =>
-      prev.includes(type) ? prev.filter((item) => item !== type) : [...prev, type]
-    );
-  };
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();

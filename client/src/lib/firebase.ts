@@ -21,3 +21,13 @@ export const auth = getAuth(app);
 export const db = getFirestore(app);
 
 console.log("This is my project shiii ", import.meta.env.VITE_FIREBASE_PROJECT_ID);
+
+
+//This is that bridge that lets the frontend talk to the backend
+export const getAuthToken = async () => {
+  const user = auth.currentUser;
+  if (user) {
+    return await user.getIdToken(); 
+  }
+  return null;
+};
