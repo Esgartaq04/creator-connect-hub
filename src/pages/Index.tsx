@@ -8,6 +8,7 @@ import { useState } from "react";
 import { CollaborationModal } from "@/components/CollaborationModal";
 import type { Creator } from "@/data/mockData";
 
+// Home Page
 const Index = () => {
   const [collabCreator, setCollabCreator] = useState<Creator | null>(null);
   const featuredCreator = mockCreators[1]; // Maya for featured preview
@@ -20,7 +21,7 @@ const Index = () => {
     },
     {
       icon: BarChart3,
-      title: "Track Your Growth",
+      title: "Track Your Growth", 
       description: "See unified analytics and understand your audience across platforms.",
     },
     {

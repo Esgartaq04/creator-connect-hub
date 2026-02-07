@@ -30,6 +30,8 @@ const platformIcons: Record<string, React.ElementType> = {
   instagram: Instagram,
 };
 
+
+// MyProfile Page
 export default function Portfolio() {
   const { id } = useParams();
   const creator = mockCreators.find((c) => c.id === id) || mockCreators[0];
@@ -110,10 +112,30 @@ export default function Portfolio() {
               </div>
 
               {/* CTA */}
-              <Button onClick={() => setShowCollab(true)} size="lg" className="mt-6">
+              {/* <Button onClick={() => setShowCollab(true)} size="lg" className="mt-6">
                 <Handshake className="mr-2 h-5 w-5" />
                 Request Collaboration
-              </Button>
+              </Button> */}
+
+              {/* CTA Section */}
+              <div className="mt-6 flex flex-wrap gap-3">
+                <Button onClick={() => setShowCollab(true)} size="lg" className="flex-1 md:flex-none">
+                  <Handshake className="mr-2 h-5 w-5" />
+                  Request Collaboration
+                </Button>
+                
+                <Button 
+                  variant="outline" 
+                  size="lg" 
+                  className="flex-1 md:flex-none group"
+                  asChild
+                >
+                  <Link to="/network">
+                    <Users className="mr-2 h-5 w-5 group-hover:text-primary transition-colors" />
+                    My Connections
+                  </Link>
+                </Button>
+              </div>
             </div>
           </div>
         </div>
