@@ -14,11 +14,6 @@ import {
   Info,
   Lightbulb,
 } from "lucide-react";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
 
 export default function Messaging() {
   return (
@@ -36,7 +31,7 @@ export default function Messaging() {
             </div>
 
             {/* Messages list */}
-            <div className="overflow-y-auto h-[calc(100vh-73px)]">
+            <div className="overflow-y-auto h-[calc(100vh-61px)]">
               {/* Sample message item */}
               <div className="p-4 border-b border-gray-200 hover:bg-gray-100 cursor-pointer">
                 <div className="flex items-center">
@@ -76,15 +71,16 @@ export default function Messaging() {
           </div>
 
           {/* Right side - Message thread */}
-          <div className="flex-1 flex flex-col">
+          <div className="flex-1 flex flex-col h-[calc(100vh-73px)]">
             {/* Message thread header */}
-            <div className="p-3 border-b border-gray-300 justify-between min-h-[64px] flex items-center">
-              <h1 className="text-xl font-bold">
+            <div className="ps-2 border-b border-gray-300 items-center justify-between min-h-[61px] flex ">
+              <h3 className="text-xl font-bold">
                 Conversation with Jane Smith
-              </h1>
+              </h3>
+              <p className="text-xs pr-2 text-gray-500 font-bold">Online</p>
             </div>
             {/* Messages container */}
-            <div className="flex-1 overflow-y-auto p-4">
+            <div className="flex-1 p-4 overflow-y-auto">
               {/* Received message */}
               {/* <div className="mb-4">
                 <div className="bg-gray-200 rounded-lg p-3 max-w-xs">
@@ -116,15 +112,16 @@ export default function Messaging() {
                   10:35 AM
                 </span>
               </div>
-            </div>{" "}
+            </div>
             {/* end of message block*/}
+
             {/* Message input */}
-            <div className="p-4 border-t border-gray-300">
+            <div className="mt-auto p-4 border-t border-gray-300">
               <div className="flex">
                 <input
                   type="text"
                   placeholder="Type a message..."
-                  className="flex-1 border border-gray-300 rounded-l-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="flex-1 border border-gray-300 rounded-l-lg p-3 focus:outline-none focus:ring-1 focus:ring-blue-500"
                 />
                 <button className="bg-blue-500 text-white px-6 rounded-r-lg font-medium hover:bg-blue-600 transition-colors">
                   Send
