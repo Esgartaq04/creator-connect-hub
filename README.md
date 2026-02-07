@@ -62,6 +62,27 @@ Start the frontend:
 npm run dev
 ```
 
+## Test locally (hot reload)
+
+1) In one terminal, run the backend:
+```
+npm run dev:server
+```
+
+2) In another terminal, run the frontend:
+```
+npm run dev
+```
+
+3) Open the app at:
+```
+http://localhost:5173
+```
+
+4) Edit any file in `client/src` and the browser will hot-reload.
+
+5) For backend changes, restart the server manually (or add a watcher like nodemon if you want auto-restart).
+
 ## Seed data (optional)
 
 If you want sample creators and analytics:
