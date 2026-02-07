@@ -26,7 +26,7 @@
     --popover: 0 0% 100%;
     --popover-foreground: 222 47% 11%;
 
-    --primary: 220 85% 32%; /* Default Blue */
+    --primary: var(--color-blue); /* Default Blue */
     --primary-foreground: 0 0% 100%;
 
     --secondary: 220 14% 96%;
