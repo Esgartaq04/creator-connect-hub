@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Header } from "@/components/Header";
 import { CreatorCard } from "@/components/CreatorCard";
 import { mockCreators } from "@/data/mockData";
-import { ArrowRight, Sparkles, Users, BarChart3, Handshake, ChevronRight } from "lucide-react";
+import { ArrowRight, Sparkles, Users, BarChart3, Handshake, ChevronRight,ShieldCheck } from "lucide-react";
 import { useState } from "react";
 import { CollaborationModal } from "@/components/CollaborationModal";
 import type { Creator } from "@/data/mockData";
