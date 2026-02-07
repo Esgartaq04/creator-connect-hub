@@ -56,11 +56,11 @@ export function Header() {
             <>
               <Button variant="ghost" size="sm" asChild className="hidden sm:flex">
                 <Link
-                  to={user.creatorId ? `/creator/${user.creatorId}` : "/onboarding"}
+                  to={user.creatorId ? `/creator/${user.creatorId}` : "/dashboard"}
                   className="flex items-center gap-2"
                 >
                   <User className="h-4 w-4" />
-                  {user.creatorId ? "My Profile" : "Create Profile"}
+                  My Profile
                 </Link>
               </Button>
               <Button size="sm" variant="outline" onClick={logout}>
@@ -76,22 +76,12 @@ export function Header() {
                 </Link>
               </Button>
               <Button size="sm" asChild>
-                <Link to="/login">Get Started</Link>
+                <Link to="/login?mode=register">Get Started</Link>
               </Button>
             </>
           )}
           {/* Theme Toggle Button */}
           <ThemeToggle />
-          
-          <Button variant="ghost" size="sm" asChild className="hidden sm:flex">
-            <Link to="/creator/1" className="flex items-center gap-2">
-              <User className="h-4 w-4" />
-              My Profile
-            </Link>
-          </Button>
-          <Button size="sm" asChild>
-            <Link to="/onboarding">Create Profile</Link>
-          </Button>
         </div>
       </div>
     </header>

@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { Header } from "@/components/Header";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -15,9 +15,17 @@ import { useAuth } from "@/context/AuthContext";
 import { ChevronDown } from "lucide-react";
 
 export default function Login() {
+  const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const { login, register } = useAuth();
-  const [mode, setMode] = useState<"login" | "register">("login");
+  const initialMode =
+    searchParams.get("mode") === "register" ? "register" : "login";
+  const [mode, setMode] = useState<"login" | "register">(initialMode);
+  useEffect(() => {
+    const nextMode =
+      searchParams.get("mode") === "register" ? "register" : "login";
+    setMode(nextMode);
+  }, [searchParams]);
   
   // Form state
   const [email, setEmail] = useState("");

@@ -26,7 +26,7 @@ const upsertUser = async ({
     .set(
       {
         email: email || null,
-        creatorId: creatorId ?? null,
+        creatorId: creatorId ?? id,
         name: name ?? null,
         firstName: firstName ?? null,
         lastName: lastName ?? null,

@@ -12,6 +12,8 @@ import Dashboard from "./pages/Dashboard";
 import Discover from "./pages/Discover";
 import NotFound from "./pages/NotFound";
 import Login from "./pages/Login";
+import Messaging from "./pages/Messaging";
+import Posts from "./pages/Posts";
 
 
 const queryClient = new QueryClient();
@@ -41,6 +43,22 @@ const App = () => (
               element={
                 <ProtectedRoute>
                   <Discover />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/messaging"
+              element={
+                <ProtectedRoute>
+                  <Messaging />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/posts"
+              element={
+                <ProtectedRoute>
+                  <Posts />
                 </ProtectedRoute>
               }
             />
