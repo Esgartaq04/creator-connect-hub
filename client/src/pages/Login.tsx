@@ -18,14 +18,18 @@ export default function Login() {
   const navigate = useNavigate();
   const { login, register } = useAuth();
   const [mode, setMode] = useState<"login" | "register">("login");
-  const [displayName, setDisplayName] = useState("");
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
+  
+  // Existing state
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
   const [dateOfBirth, setDateOfBirth] = useState("");
   const [password, setPassword] = useState("");
-  const [videoTypes, setVideoTypes] = useState<string[]>([]);
+  
+  // 1. Add new state for registration fields
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [phoneNumber, setPhoneNumber] = useState("");
+
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -69,14 +73,8 @@ export default function Login() {
       if (mode === "login") {
         await login(email, password);
       } else {
-        await register(email, password, {
-          name: displayName,
-          firstName,
-          lastName,
-          phone,
-          dateOfBirth,
-          videoTypes,
-        });
+        // 2. Pass the new state values to the register function
+        await register(email, password, firstName, lastName, phoneNumber);
       }
       navigate("/dashboard");
     } catch (err) {
@@ -104,78 +102,59 @@ export default function Login() {
             </CardHeader>
             <CardContent>
               <form onSubmit={handleSubmit} className="space-y-5">
-                {isRegistering && (
-                  <>
+                {/* 3. Render Name fields only during registration */}
+                {mode === "register" && (
+                  <div className="grid grid-cols-2 gap-4">
                     <div className="space-y-2">
-                      <Label htmlFor="displayName">Name</Label>
+                      <Label htmlFor="firstName">First Name</Label>
                       <Input
-                        id="displayName"
-                        placeholder="Your display name"
-                        value={displayName}
-                        onChange={(event) => setDisplayName(event.target.value)}
-                        required={isRegistering}
+                        id="firstName"
+                        placeholder="Guillermo"
+                        value={firstName}
+                        onChange={(e) => setFirstName(e.target.value)}
+                        required
                       />
                     </div>
-                    <div className="grid gap-4 sm:grid-cols-2">
-                      <div className="space-y-2">
-                        <Label htmlFor="firstName">First name</Label>
-                        <Input
-                          id="firstName"
-                          placeholder="First name"
-                          value={firstName}
-                          onChange={(event) => setFirstName(event.target.value)}
-                          required={isRegistering}
-                        />
-                      </div>
-                      <div className="space-y-2">
-                        <Label htmlFor="lastName">Last name</Label>
-                        <Input
-                          id="lastName"
-                          placeholder="Last name"
-                          value={lastName}
-                          onChange={(event) => setLastName(event.target.value)}
-                          required={isRegistering}
-                        />
-                      </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="lastName">Last Name</Label>
+                      <Input
+                        id="lastName"
+                        placeholder="Ramirez"
+                        value={lastName}
+                        onChange={(e) => setLastName(e.target.value)}
+                        required
+                      />
                     </div>
-                  </>
+                  </div>
                 )}
+
                 <div className="space-y-2">
                   <Label htmlFor="email">Email</Label>
                   <Input
                     id="email"
                     type="email"
-                    placeholder="you@example.com"
+                    placeholder="you@uic.edu"
                     value={email}
                     onChange={(event) => setEmail(event.target.value)}
                     required
                   />
                 </div>
-                {isRegistering && (
+
+                {/* 4. Render Phone field only during registration */}
+                {mode === "register" && (
                   <div className="space-y-2">
-                    <Label htmlFor="phone">Phone number</Label>
+                    <Label htmlFor="phone">Phone Number</Label>
                     <Input
                       id="phone"
                       type="tel"
-                      placeholder="(555) 123-4567"
-                      value={phone}
-                      onChange={(event) => setPhone(event.target.value)}
-                      required={isRegistering}
+                      placeholder="(312) 555-0123"
+                      value={phoneNumber}
+                      onChange={(e) => setPhoneNumber(e.target.value)}
+                      required
                     />
                   </div>
                 )}
-                {isRegistering && (
-                  <div className="space-y-2">
-                    <Label htmlFor="dob">Date of birth</Label>
-                    <Input
-                      id="dob"
-                      type="date"
-                      value={dateOfBirth}
-                      onChange={(event) => setDateOfBirth(event.target.value)}
-                      required={isRegistering}
-                    />
-                  </div>
-                )}
+
                 <div className="space-y-2">
                   <Label htmlFor="password">Password</Label>
                   <Input
@@ -187,36 +166,7 @@ export default function Login() {
                     required
                   />
                 </div>
-                {isRegistering && (
-                  <div className="space-y-2">
-                    <Label>Types of videos you make</Label>
-                    <DropdownMenu>
-                      <DropdownMenuTrigger asChild>
-                        <Button
-                          type="button"
-                          variant="outline"
-                          className="w-full justify-between"
-                        >
-                          {videoTypes.length > 0
-                            ? `${videoTypes.length} selected`
-                            : "Select video types"}
-                          <ChevronDown className="h-4 w-4 opacity-70" />
-                        </Button>
-                      </DropdownMenuTrigger>
-                      <DropdownMenuContent className="w-56">
-                        {videoTypeOptions.map((type) => (
-                          <DropdownMenuCheckboxItem
-                            key={type}
-                            checked={videoTypes.includes(type)}
-                            onCheckedChange={() => toggleVideoType(type)}
-                          >
-                            {type}
-                          </DropdownMenuCheckboxItem>
-                        ))}
-                      </DropdownMenuContent>
-                    </DropdownMenu>
-                  </div>
-                )}
+
                 {error && (
                   <p className="text-sm text-destructive">{error}</p>
                 )}
@@ -232,6 +182,7 @@ export default function Login() {
                       : "Create account"}
                 </Button>
               </form>
+              
               <div className="mt-4 text-center text-sm text-muted-foreground">
                 {mode === "login" ? (
                   <>
