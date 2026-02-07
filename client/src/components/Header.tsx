@@ -2,10 +2,12 @@ import { Link, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { Sparkles, LayoutDashboard, Compass, User } from "lucide-react";
+import { useAuth } from "@/context/AuthContext";
 import { ThemeToggle } from "./ThemeToggle";
 
 export function Header() {
   const location = useLocation();
+  const { user, logout } = useAuth();
 
   const navItems = [
     { href: "/discover", label: "Discover", icon: Compass },
@@ -50,6 +52,34 @@ export function Header() {
 
         {/* Actions */}
         <div className="flex items-center gap-3">
+          {user ? (
+            <>
+              <Button variant="ghost" size="sm" asChild className="hidden sm:flex">
+                <Link
+                  to={user.creatorId ? `/creator/${user.creatorId}` : "/onboarding"}
+                  className="flex items-center gap-2"
+                >
+                  <User className="h-4 w-4" />
+                  {user.creatorId ? "My Profile" : "Create Profile"}
+                </Link>
+              </Button>
+              <Button size="sm" variant="outline" onClick={logout}>
+                Log out
+              </Button>
+            </>
+          ) : (
+            <>
+              <Button variant="ghost" size="sm" asChild className="hidden sm:flex">
+                <Link to="/login" className="flex items-center gap-2">
+                  <User className="h-4 w-4" />
+                  Login
+                </Link>
+              </Button>
+              <Button size="sm" asChild>
+                <Link to="/login">Get Started</Link>
+              </Button>
+            </>
+          )}
           {/* Theme Toggle Button */}
           <ThemeToggle />
           

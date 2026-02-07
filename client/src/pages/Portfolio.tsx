@@ -6,7 +6,7 @@ import { StatTile } from "@/components/StatTile";
 import { ContentThumbnailCard } from "@/components/ContentThumbnailCard";
 import { CollaborationModal } from "@/components/CollaborationModal";
 import { Button } from "@/components/ui/button";
-import { mockCreators, formatNumber, levelDescriptions } from "@/data/mockData";
+import { formatNumber, levelDescriptions } from "@/data/mockData";
 import {
   Eye,
   TrendingUp,
@@ -23,6 +23,7 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { useCreator } from "@/hooks/useCreator";
 
 const platformIcons: Record<string, React.ElementType> = {
   youtube: Youtube,
@@ -34,8 +35,33 @@ const platformIcons: Record<string, React.ElementType> = {
 // MyProfile Page
 export default function Portfolio() {
   const { id } = useParams();
-  const creator = mockCreators.find((c) => c.id === id) || mockCreators[0];
+  const { data: creator, isLoading } = useCreator(id);
   const [showCollab, setShowCollab] = useState(false);
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-background">
+        <Header />
+        <main className="container py-10">
+          <p className="text-sm text-muted-foreground">Loading creator...</p>
+        </main>
+      </div>
+    );
+  }
+
+  if (!creator) {
+    return (
+      <div className="min-h-screen bg-background">
+        <Header />
+        <main className="container py-10">
+          <p className="text-sm text-muted-foreground">Creator not found.</p>
+          <Button variant="outline" className="mt-4" asChild>
+            <Link to="/discover">Back to Discover</Link>
+          </Button>
+        </main>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-background">
@@ -149,11 +175,17 @@ export default function Portfolio() {
             <h2 className="font-display text-xl font-semibold text-foreground">
               Featured Content
             </h2>
-            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-              {creator.featuredContent.map((content) => (
-                <ContentThumbnailCard key={content.id} content={content} />
-              ))}
-            </div>
+            {creator.featuredContent.length > 0 ? (
+              <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                {creator.featuredContent.map((content) => (
+                  <ContentThumbnailCard key={content.id} content={content} />
+                ))}
+              </div>
+            ) : (
+              <p className="text-sm text-muted-foreground">
+                No featured content yet.
+              </p>
+            )}
 
             {/* Collaboration preferences */}
             <div className="glass-card rounded-2xl p-6 mt-8">

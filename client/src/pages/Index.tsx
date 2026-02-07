@@ -10,14 +10,11 @@ import type { Creator } from "@/data/mockData";
 
 // Home Page
 const Index = () => {
-  const [collabCreator, setCollabCreator] = useState<Creator | null>(null);
-  const featuredCreator = mockCreators[1]; // Maya for featured preview
-
   const steps = [
     {
       icon: Sparkles,
-      title: "Create Your Profile",
-      description: "Add your content, platforms, and collaboration preferences in minutes.",
+      title: "Create a profile",
+      description: "Showcase your work and define the collaborations you want.",
     },
     {
       icon: BarChart3,
@@ -25,9 +22,9 @@ const Index = () => {
       description: "See unified analytics and understand your audience across platforms.",
     },
     {
-      icon: Handshake,
-      title: "Find Collaborators",
-      description: "Connect with creators at your level who share your vision.",
+      icon: ShieldCheck,
+      title: "Collaborate safely",
+      description: "Log in to access verified creators and private dashboards.",
     },
   ];
 
@@ -52,92 +49,64 @@ const Index = () => {
               </div>
 
               <h1 className="font-display text-4xl font-bold leading-tight text-foreground sm:text-5xl lg:text-6xl">
-                One portfolio.
+                Build your creator home.
                 <br />
-                <span className="gradient-text">One audience.</span>
+                <span className="gradient-text">Find the right collabs.</span>
                 <br />
-                Better collaborations.
+                Grow together.
               </h1>
 
               <p className="mt-6 text-lg text-muted-foreground leading-relaxed">
-                Showcase your work, track your growth, and connect with creators who get you. 
-                Built for creators ready to level up.
+                Creator Connect Hub helps you build a profile, understand your
+                performance, and discover collaborators in one place.
               </p>
 
               <div className="mt-8 flex flex-wrap gap-4">
                 <Button size="lg" asChild className="text-base">
-                  <Link to="/onboarding">
-                    Create Your Profile
+                  <Link to="/login">
+                    Get started
                     <ArrowRight className="ml-2 h-5 w-5" />
                   </Link>
                 </Button>
                 <Button size="lg" variant="outline" asChild className="text-base">
-                  <Link to="/discover">Explore Creators</Link>
+                  <Link to="/login">Log in</Link>
                 </Button>
-              </div>
-
-              {/* Social proof */}
-              <div className="mt-10 flex items-center gap-4">
-                <div className="flex -space-x-2">
-                  {mockCreators.slice(0, 4).map((creator) => (
-                    <img
-                      key={creator.id}
-                      src={creator.avatar}
-                      alt={creator.name}
-                      className="h-10 w-10 rounded-full border-2 border-background object-cover"
-                    />
-                  ))}
-                </div>
-                <p className="text-sm text-muted-foreground">
-                  <span className="font-semibold text-foreground">500+</span> creators already growing together
-                </p>
               </div>
             </div>
 
-            {/* Right: Featured Creator Preview */}
+            {/* Right: Preview Card */}
             <div className="relative lg:pl-8">
               <div className="absolute inset-0 rounded-3xl bg-gradient-to-br from-primary/5 to-accent/5 blur-2xl" />
-              <div className="relative glass-card rounded-2xl p-6 animate-float">
-                <div className="flex items-center gap-4">
-                  <img
-                    src={featuredCreator.avatar}
-                    alt={featuredCreator.name}
-                    className="h-16 w-16 rounded-full object-cover ring-2 ring-primary/20"
-                  />
+              <div className="relative glass-card rounded-2xl p-6">
+                <div className="flex items-center gap-3">
+                  <div className="flex h-12 w-12 items-center justify-center rounded-full bg-primary/10">
+                    <Users className="h-6 w-6 text-primary" />
+                  </div>
                   <div>
-                    <h3 className="font-display text-lg font-semibold">{featuredCreator.name}</h3>
-                    <p className="text-sm text-muted-foreground">Level {featuredCreator.level} – {featuredCreator.levelName}</p>
+                    <h3 className="font-display text-lg font-semibold">
+                      Your creator dashboard
+                    </h3>
+                    <p className="text-sm text-muted-foreground">
+                      Access analytics, collabs, and profile insights.
+                    </p>
                   </div>
                 </div>
 
-                <div className="mt-4 grid grid-cols-3 gap-3">
-                  <div className="rounded-lg bg-secondary/50 p-3 text-center">
-                    <p className="text-xl font-bold text-foreground">245K</p>
-                    <p className="text-xs text-muted-foreground">Followers</p>
+                <div className="mt-6 grid gap-3">
+                  <div className="rounded-xl border border-border/60 bg-secondary/40 p-4">
+                    <p className="text-xs text-muted-foreground">Weekly views</p>
+                    <p className="mt-2 text-2xl font-semibold text-foreground">48.2k</p>
+                    <p className="text-xs text-accent">+12% vs last week</p>
                   </div>
-                  <div className="rounded-lg bg-secondary/50 p-3 text-center">
-                    <p className="text-xl font-bold text-foreground">34K</p>
-                    <p className="text-xs text-muted-foreground">Avg Views</p>
-                  </div>
-                  <div className="rounded-lg bg-secondary/50 p-3 text-center">
-                    <p className="text-xl font-bold text-foreground">8.2%</p>
-                    <p className="text-xs text-muted-foreground">Engagement</p>
+                  <div className="rounded-xl border border-border/60 bg-secondary/40 p-4">
+                    <p className="text-xs text-muted-foreground">Collab requests</p>
+                    <p className="mt-2 text-2xl font-semibold text-foreground">7 pending</p>
+                    <p className="text-xs text-muted-foreground">2 new today</p>
                   </div>
                 </div>
 
-                <div className="mt-4 flex flex-wrap gap-2">
-                  {featuredCreator.niche.map((tag) => (
-                    <span
-                      key={tag}
-                      className="rounded-full bg-primary/10 px-3 py-1 text-xs font-medium text-primary"
-                    >
-                      {tag}
-                    </span>
-                  ))}
-                </div>
-
-                <Button className="mt-4 w-full" asChild>
-                  <Link to={`/creator/${featuredCreator.id}`}>View Full Profile</Link>
+                <Button className="mt-6 w-full" asChild>
+                  <Link to="/login">Unlock dashboard</Link>
                 </Button>
               </div>
             </div>
@@ -180,38 +149,6 @@ const Index = () => {
         </div>
       </section>
 
-      {/* Discover Creators CTA */}
-      <section className="py-20">
-        <div className="container">
-          <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4 mb-8">
-            <div>
-              <h2 className="font-display text-3xl font-bold text-foreground">
-                Discover Creators
-              </h2>
-              <p className="mt-2 text-muted-foreground">
-                Find your next collaboration partner
-              </p>
-            </div>
-            <Button variant="ghost" asChild>
-              <Link to="/discover" className="flex items-center gap-1">
-                View All
-                <ChevronRight className="h-4 w-4" />
-              </Link>
-            </Button>
-          </div>
-
-          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {mockCreators.slice(0, 3).map((creator) => (
-              <CreatorCard
-                key={creator.id}
-                creator={creator}
-                onRequestCollab={() => setCollabCreator(creator)}
-              />
-            ))}
-          </div>
-        </div>
-      </section>
-
       {/* Footer CTA */}
       <section className="py-16 gradient-hero">
         <div className="container text-center">
@@ -222,7 +159,7 @@ const Index = () => {
             Join hundreds of creators building their audience and finding meaningful collaborations.
           </p>
           <Button size="lg" className="mt-6" asChild>
-            <Link to="/onboarding">
+            <Link to="/login">
               Get Started Free
               <ArrowRight className="ml-2 h-5 w-5" />
             </Link>
@@ -240,16 +177,11 @@ const Index = () => {
             <span className="font-display font-semibold">CreatorHub</span>
           </div>
           <p className="text-sm text-muted-foreground">
-            © 2024 CreatorHub. Built with ❤️ for creators.
+            © 2026 Quantify.
           </p>
         </div>
       </footer>
 
-      <CollaborationModal
-        creator={collabCreator}
-        open={!!collabCreator}
-        onOpenChange={(open) => !open && setCollabCreator(null)}
-      />
     </div>
   );
 };
