@@ -32,9 +32,7 @@ import { useAnalytics } from "@/hooks/useAnalytics";
 
 export default function Dashboard() {
   const { data: currentUser, isLoading: isUserLoading } = useCurrentCreator();
-  const { data: analyticsData, isLoading: isAnalyticsLoading } = useAnalytics(
-    currentUser?.id
-  );
+  const { data: analyticsData, isLoading: isAnalyticsLoading } = useAnalytics();
 
   if (isUserLoading) {
     return (

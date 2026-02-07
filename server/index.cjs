@@ -152,6 +152,26 @@ app.get("/api/analytics/:creatorId", authMiddleware, async (req, res) => {
   }
 });
 
+app.get("/api/analytics/me", authMiddleware, async (req, res) => {
+  try {
+    const user = await getUserById(req.user.id);
+    const creatorId = user?.creatorId;
+    if (!creatorId) {
+      return res.json({
+        weeklyViews: [],
+        growthTrend: [],
+        topContent: [],
+        insights: [],
+      });
+    }
+    const analytics = await getAnalyticsByCreatorId(creatorId);
+    res.json(analytics);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Failed to fetch analytics." });
+  }
+});
+
 app.post("/api/analytics/:creatorId/init", authMiddleware, async (req, res) => {
   try {
     await initializeAnalytics(req.params.creatorId);
