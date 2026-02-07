@@ -1,10 +1,9 @@
 import { useQuery } from "@tanstack/react-query";
-import { getAnalyticsByCreatorId } from "@/services/analyticsService";
+import { getAnalyticsForCurrentUser } from "@/services/analyticsService";
 
-export function useAnalytics(creatorId: string | undefined) {
+export function useAnalytics() {
   return useQuery({
-    queryKey: ["analytics", creatorId],
-    queryFn: () => getAnalyticsByCreatorId(creatorId ?? ""),
-    enabled: !!creatorId,
+    queryKey: ["analytics", "me"],
+    queryFn: () => getAnalyticsForCurrentUser(),
   });
 }

@@ -39,6 +39,11 @@ export async function getAnalyticsByCreatorId(
   return { ...defaultAnalytics, ...analytics };
 }
 
+export async function getAnalyticsForCurrentUser(): Promise<AnalyticsData> {
+  const analytics = await request<AnalyticsData>("/api/analytics/me");
+  return { ...defaultAnalytics, ...analytics };
+}
+
 export async function initializeAnalytics(
   creatorId: string
 ): Promise<void> {

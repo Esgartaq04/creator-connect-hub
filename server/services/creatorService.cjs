@@ -42,7 +42,10 @@ const getCreatorById = async (id) => {
   return { id: snapshot.id, ...snapshot.data() };
 };
 
-const createCreator = async ({ name, bio, niche, platforms, collaborationGoals }) => {
+const createCreator = async (
+  id,
+  { name, bio, niche, platforms, collaborationGoals }
+) => {
   if (!name || !bio || !niche) {
     const error = new Error("Missing required fields.");
     error.status = 400;
@@ -70,8 +73,8 @@ const createCreator = async ({ name, bio, niche, platforms, collaborationGoals }
     featuredContent: [],
   };
 
-  const docRef = await db.collection("creators").add(creator);
-  return docRef.id;
+  await db.collection("creators").doc(id).set(creator, { merge: true });
+  return id;
 };
 
 module.exports = {
