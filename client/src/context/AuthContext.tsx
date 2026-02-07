@@ -6,7 +6,11 @@ import {
   signOut,
 } from "firebase/auth";
 import { auth, getAuthToken } from "@/lib/firebase";
-import { fetchUserProfile } from "@/services/userService";
+import {
+  fetchUserProfile,
+  updateUserProfile,
+  type UpdateUserProfileInput,
+} from "@/services/userService";
 
 interface AuthUser {
   id: string;
@@ -18,7 +22,11 @@ interface AuthContextValue {
   user: AuthUser | null;
   isLoading: boolean;
   login: (email: string, password: string) => Promise<void>;
-  register: (email: string, password: string) => Promise<void>;
+  register: (
+    email: string,
+    password: string,
+    profile: UpdateUserProfileInput
+  ) => Promise<void>;
   logout: () => void;
 }
 
@@ -68,18 +76,23 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     });
   };
 
-  const register = async (email: string, password: string) => {
+  const register = async (
+    email: string,
+    password: string,
+    profile: UpdateUserProfileInput
+  ) => {
     const credentials = await createUserWithEmailAndPassword(
       auth,
       email,
       password
     );
     const token = await credentials.user.getIdToken();
-    const profile = await fetchUserProfile(token);
+    await updateUserProfile(token, profile);
+    const updatedProfile = await fetchUserProfile(token);
     setUser({
       id: credentials.user.uid,
       email: credentials.user.email,
-      creatorId: profile.creatorId ?? null,
+      creatorId: updatedProfile.creatorId ?? null,
     });
   };
 

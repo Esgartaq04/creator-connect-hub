@@ -5,16 +5,61 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  DropdownMenu,
+  DropdownMenuCheckboxItem,
+  DropdownMenuContent,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { useAuth } from "@/context/AuthContext";
+import { ChevronDown } from "lucide-react";
 
 export default function Login() {
   const navigate = useNavigate();
   const { login, register } = useAuth();
   const [mode, setMode] = useState<"login" | "register">("login");
+  const [displayName, setDisplayName] = useState("");
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
+  const [phone, setPhone] = useState("");
+  const [dateOfBirth, setDateOfBirth] = useState("");
   const [password, setPassword] = useState("");
+  const [videoTypes, setVideoTypes] = useState<string[]>([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  const isRegistering = mode === "register";
+  const isFormValid = isRegistering
+    ? displayName.trim() &&
+      firstName.trim() &&
+      lastName.trim() &&
+      email.trim() &&
+      phone.trim() &&
+      dateOfBirth.trim() &&
+      password.trim() &&
+      videoTypes.length > 0
+    : email.trim() && password.trim();
+  const videoTypeOptions = [
+    "Education",
+    "Gaming",
+    "Vlogs",
+    "Tech",
+    "Lifestyle",
+    "Comedy",
+    "Beauty",
+    "Fitness",
+    "Food",
+    "Music",
+    "Travel",
+    "Finance",
+  ];
+
+  const toggleVideoType = (type: string) => {
+    setVideoTypes((prev) =>
+      prev.includes(type) ? prev.filter((item) => item !== type) : [...prev, type]
+    );
+  };
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
@@ -24,7 +69,14 @@ export default function Login() {
       if (mode === "login") {
         await login(email, password);
       } else {
-        await register(email, password);
+        await register(email, password, {
+          name: displayName,
+          firstName,
+          lastName,
+          phone,
+          dateOfBirth,
+          videoTypes,
+        });
       }
       navigate("/dashboard");
     } catch (err) {
@@ -52,6 +104,42 @@ export default function Login() {
             </CardHeader>
             <CardContent>
               <form onSubmit={handleSubmit} className="space-y-5">
+                {isRegistering && (
+                  <>
+                    <div className="space-y-2">
+                      <Label htmlFor="displayName">Name</Label>
+                      <Input
+                        id="displayName"
+                        placeholder="Your display name"
+                        value={displayName}
+                        onChange={(event) => setDisplayName(event.target.value)}
+                        required={isRegistering}
+                      />
+                    </div>
+                    <div className="grid gap-4 sm:grid-cols-2">
+                      <div className="space-y-2">
+                        <Label htmlFor="firstName">First name</Label>
+                        <Input
+                          id="firstName"
+                          placeholder="First name"
+                          value={firstName}
+                          onChange={(event) => setFirstName(event.target.value)}
+                          required={isRegistering}
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <Label htmlFor="lastName">Last name</Label>
+                        <Input
+                          id="lastName"
+                          placeholder="Last name"
+                          value={lastName}
+                          onChange={(event) => setLastName(event.target.value)}
+                          required={isRegistering}
+                        />
+                      </div>
+                    </div>
+                  </>
+                )}
                 <div className="space-y-2">
                   <Label htmlFor="email">Email</Label>
                   <Input
@@ -63,6 +151,31 @@ export default function Login() {
                     required
                   />
                 </div>
+                {isRegistering && (
+                  <div className="space-y-2">
+                    <Label htmlFor="phone">Phone number</Label>
+                    <Input
+                      id="phone"
+                      type="tel"
+                      placeholder="(555) 123-4567"
+                      value={phone}
+                      onChange={(event) => setPhone(event.target.value)}
+                      required={isRegistering}
+                    />
+                  </div>
+                )}
+                {isRegistering && (
+                  <div className="space-y-2">
+                    <Label htmlFor="dob">Date of birth</Label>
+                    <Input
+                      id="dob"
+                      type="date"
+                      value={dateOfBirth}
+                      onChange={(event) => setDateOfBirth(event.target.value)}
+                      required={isRegistering}
+                    />
+                  </div>
+                )}
                 <div className="space-y-2">
                   <Label htmlFor="password">Password</Label>
                   <Input
@@ -74,13 +187,43 @@ export default function Login() {
                     required
                   />
                 </div>
+                {isRegistering && (
+                  <div className="space-y-2">
+                    <Label>Types of videos you make</Label>
+                    <DropdownMenu>
+                      <DropdownMenuTrigger asChild>
+                        <Button
+                          type="button"
+                          variant="outline"
+                          className="w-full justify-between"
+                        >
+                          {videoTypes.length > 0
+                            ? `${videoTypes.length} selected`
+                            : "Select video types"}
+                          <ChevronDown className="h-4 w-4 opacity-70" />
+                        </Button>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent className="w-56">
+                        {videoTypeOptions.map((type) => (
+                          <DropdownMenuCheckboxItem
+                            key={type}
+                            checked={videoTypes.includes(type)}
+                            onCheckedChange={() => toggleVideoType(type)}
+                          >
+                            {type}
+                          </DropdownMenuCheckboxItem>
+                        ))}
+                      </DropdownMenuContent>
+                    </DropdownMenu>
+                  </div>
+                )}
                 {error && (
                   <p className="text-sm text-destructive">{error}</p>
                 )}
                 <Button
                   type="submit"
                   className="w-full"
-                  disabled={isSubmitting}
+                  disabled={isSubmitting || !isFormValid}
                 >
                   {isSubmitting
                     ? "Please wait..."

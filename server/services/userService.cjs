@@ -9,7 +9,17 @@ const getUserById = async (userId) => {
   return { id: snapshot.id, ...snapshot.data() };
 };
 
-const upsertUser = async ({ id, email, creatorId }) => {
+const upsertUser = async ({
+  id,
+  email,
+  creatorId,
+  name,
+  firstName,
+  lastName,
+  phone,
+  dateOfBirth,
+  videoTypes,
+}) => {
   await db
     .collection(USERS_COLLECTION)
     .doc(id)
@@ -17,6 +27,12 @@ const upsertUser = async ({ id, email, creatorId }) => {
       {
         email: email || null,
         creatorId: creatorId ?? null,
+        name: name ?? null,
+        firstName: firstName ?? null,
+        lastName: lastName ?? null,
+        phone: phone ?? null,
+        dateOfBirth: dateOfBirth ?? null,
+        videoTypes: Array.isArray(videoTypes) ? videoTypes : [],
         updatedAt: new Date().toISOString(),
       },
       { merge: true }

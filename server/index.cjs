@@ -61,10 +61,48 @@ app.get("/api/users/me", authMiddleware, async (req, res) => {
       id: req.user.id,
       email: req.user.email,
       creatorId: refreshed?.creatorId || null,
+      name: refreshed?.name || null,
+      firstName: refreshed?.firstName || null,
+      lastName: refreshed?.lastName || null,
+      phone: refreshed?.phone || null,
+      dateOfBirth: refreshed?.dateOfBirth || null,
+      videoTypes: refreshed?.videoTypes || [],
     });
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Failed to fetch user." });
+  }
+});
+
+app.put("/api/users/me", authMiddleware, async (req, res) => {
+  try {
+    const { name, firstName, lastName, phone, dateOfBirth, videoTypes } =
+      req.body || {};
+    await upsertUser({
+      id: req.user.id,
+      email: req.user.email,
+      name,
+      firstName,
+      lastName,
+      phone,
+      dateOfBirth,
+      videoTypes,
+    });
+    const updated = await getUserById(req.user.id);
+    res.json({
+      id: req.user.id,
+      email: req.user.email,
+      creatorId: updated?.creatorId || null,
+      name: updated?.name || null,
+      firstName: updated?.firstName || null,
+      lastName: updated?.lastName || null,
+      phone: updated?.phone || null,
+      dateOfBirth: updated?.dateOfBirth || null,
+      videoTypes: updated?.videoTypes || [],
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Failed to update user." });
   }
 });
 
