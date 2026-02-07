@@ -105,7 +105,7 @@ export default function Messaging() {
                 <input
                   type="text"
                   placeholder="Type a message..."
-                  className="flex-1 border border-gray-300 rounded-l-lg p-3 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                  className="flex-1 border border-gray-300 text-gray-900 rounded-l-lg p-3 focus:outline-none focus:ring-1 focus:ring-blue-500"
                 />
                 <button className="bg-blue-500 text-white px-6 rounded-r-lg font-medium hover:bg-blue-600 transition-colors">
                   Send
